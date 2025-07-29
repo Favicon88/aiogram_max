@@ -1,12 +1,17 @@
 from __future__ import annotations
-
+from typing import List
 from typing import TYPE_CHECKING, Any, Optional
-
+from pydantic import BaseModel
 from ..types import Update
-from .base import TelegramMethod
+from .base import MaxMethod
 
 
-class GetUpdates(TelegramMethod[list[Update]]):
+class UpdatesResponse(BaseModel):
+    updates: List[Update | None]
+    marker: Optional[int]
+
+
+class GetUpdates(MaxMethod[UpdatesResponse]):
     """
     Use this method to receive incoming updates using long polling (`wiki <https://en.wikipedia.org/wiki/Push_technology#Long_polling>`_). Returns an Array of :class:`aiogram.types.update.Update` objects.
 
@@ -19,8 +24,9 @@ class GetUpdates(TelegramMethod[list[Update]]):
     Source: https://dev.max.ru/docs-api/objects/Update
     """
 
-    __returning__ = list[Update]
+    __returning__ = UpdatesResponse
     __api_method__ = "updates"
+    __http_method__ = "GET"
 
     offset: Optional[int] = None
     """Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as :class:`aiogram.methods.get_updates.GetUpdates` is called with an *offset* higher than its *update_id*. The negative offset can be specified to retrieve updates starting from *-offset* update from the end of the updates queue. All previous updates will be forgotten."""

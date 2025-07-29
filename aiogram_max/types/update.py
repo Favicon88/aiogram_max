@@ -27,11 +27,11 @@ if TYPE_CHECKING:
 
 class Update(TelegramObject):
     """
-    This `object <https://core.telegram.org/bots/api#available-types>`_ represents an incoming update.
+    This `object <https://dev.max.ru/docs-api/objects/Update>`_ represents an incoming update.
 
     At most **one** of the optional parameters can be present in any given update.
 
-    Source: https://core.telegram.org/bots/api#update
+    Source: https://dev.max.ru/docs-api/objects/Update
     """
 
     update_id: int
@@ -98,9 +98,13 @@ class Update(TelegramObject):
             business_connection: Optional[BusinessConnection] = None,
             business_message: Optional[Message] = None,
             edited_business_message: Optional[Message] = None,
-            deleted_business_messages: Optional[BusinessMessagesDeleted] = None,
+            deleted_business_messages: Optional[
+                BusinessMessagesDeleted
+            ] = None,
             message_reaction: Optional[MessageReactionUpdated] = None,
-            message_reaction_count: Optional[MessageReactionCountUpdated] = None,
+            message_reaction_count: Optional[
+                MessageReactionCountUpdated
+            ] = None,
             inline_query: Optional[InlineQuery] = None,
             chosen_inline_result: Optional[ChosenInlineResult] = None,
             callback_query: Optional[CallbackQuery] = None,
@@ -207,7 +211,9 @@ class Update(TelegramObject):
         if self.purchased_paid_media:
             return "purchased_paid_media"
 
-        raise UpdateTypeLookupError("Update does not contain any known event type.")
+        raise UpdateTypeLookupError(
+            "Update does not contain any known event type."
+        )
 
     @property
     def event(self) -> TelegramObject:
