@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "aiogram_max"
+description = 'Modern and fully asynchronous framework for Max Messenger'
+readme = "README.rst"
+requires-python = ">=3.9"
+license = "MIT"
+authors = [
+    { name = "Viktor Oblomov", email = "viktorall88@gmail.com" },
+]
+maintainers = [
+    { name = "Viktor Oblomov", email = "viktorall88@gmail.com" },
+]
+keywords = [
+    "max",
+    "bot",
+    "api",
+    "framework",
+    "wrapper",
+    "asyncio",
+]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Framework :: AsyncIO",
+    "Typing :: Typed",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Communications :: Chat",
+]
+
+dependencies = [
+    "magic-filter>=1.0.12,<1.1",
+    "aiohttp>=3.9.0,<3.13",
+    "pydantic>=2.4.1,<2.12",
+    "aiofiles>=23.2.1,<24.2",
+    "certifi>=2023.7.22",
+    "typing-extensions>=4.7.0,<=5.0",
+]
+dynamic = ["version"]
+
+[tool.hatch.version]
+path = "aiogram_max/__meta__.py"
+
+[project.optional-dependencies]
+fast = [
+    "uvloop>=0.17.0; (sys_platform == 'darwin' or sys_platform == 'linux') and platform_python_implementation != 'PyPy' and python_version < '3.13'",
+    "uvloop>=0.21.0; (sys_platform == 'darwin' or sys_platform == 'linux') and platform_python_implementation != 'PyPy' and python_version >= '3.13'",
+    "aiodns>=3.0.0",
+]
