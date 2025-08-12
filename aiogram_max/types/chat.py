@@ -1364,3 +1364,7 @@ class Chat(TelegramObject):
             chat_id=self.id,
             **kwargs,
         ).as_(self._bot)
+
+
+
+class Chat(TelegramObject):

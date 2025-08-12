@@ -3,6 +3,7 @@ from typing import List, Literal, Optional, Union
 from .accepted_gift_types import AcceptedGiftTypes
 from .affiliate_info import AffiliateInfo
 from .animation import Animation
+from .attachment import Attachment
 from .audio import Audio
 from .background_fill import BackgroundFill
 from .background_fill_freeform_gradient import BackgroundFillFreeformGradient
@@ -25,7 +26,9 @@ from .bot_command_scope_all_chat_administrators import (
 from .bot_command_scope_all_group_chats import BotCommandScopeAllGroupChats
 from .bot_command_scope_all_private_chats import BotCommandScopeAllPrivateChats
 from .bot_command_scope_chat import BotCommandScopeChat
-from .bot_command_scope_chat_administrators import BotCommandScopeChatAdministrators
+from .bot_command_scope_chat_administrators import (
+    BotCommandScopeChatAdministrators,
+)
 from .bot_command_scope_chat_member import BotCommandScopeChatMember
 from .bot_command_scope_default import BotCommandScopeDefault
 from .bot_command_scope_union import BotCommandScopeUnion
@@ -113,9 +116,13 @@ from .inline_query_result import InlineQueryResult
 from .inline_query_result_article import InlineQueryResultArticle
 from .inline_query_result_audio import InlineQueryResultAudio
 from .inline_query_result_cached_audio import InlineQueryResultCachedAudio
-from .inline_query_result_cached_document import InlineQueryResultCachedDocument
+from .inline_query_result_cached_document import (
+    InlineQueryResultCachedDocument,
+)
 from .inline_query_result_cached_gif import InlineQueryResultCachedGif
-from .inline_query_result_cached_mpeg4_gif import InlineQueryResultCachedMpeg4Gif
+from .inline_query_result_cached_mpeg4_gif import (
+    InlineQueryResultCachedMpeg4Gif,
+)
 from .inline_query_result_cached_photo import InlineQueryResultCachedPhoto
 from .inline_query_result_cached_sticker import InlineQueryResultCachedSticker
 from .inline_query_result_cached_video import InlineQueryResultCachedVideo
@@ -217,9 +224,13 @@ from .passport_element_error_data_field import PassportElementErrorDataField
 from .passport_element_error_file import PassportElementErrorFile
 from .passport_element_error_files import PassportElementErrorFiles
 from .passport_element_error_front_side import PassportElementErrorFrontSide
-from .passport_element_error_reverse_side import PassportElementErrorReverseSide
+from .passport_element_error_reverse_side import (
+    PassportElementErrorReverseSide,
+)
 from .passport_element_error_selfie import PassportElementErrorSelfie
-from .passport_element_error_translation_file import PassportElementErrorTranslationFile
+from .passport_element_error_translation_file import (
+    PassportElementErrorTranslationFile,
+)
 from .passport_element_error_translation_files import (
     PassportElementErrorTranslationFiles,
 )
@@ -276,7 +287,9 @@ from .successful_payment import SuccessfulPayment
 from .switch_inline_query_chosen_chat import SwitchInlineQueryChosenChat
 from .text_quote import TextQuote
 from .transaction_partner import TransactionPartner
-from .transaction_partner_affiliate_program import TransactionPartnerAffiliateProgram
+from .transaction_partner_affiliate_program import (
+    TransactionPartnerAffiliateProgram,
+)
 from .transaction_partner_chat import TransactionPartnerChat
 from .transaction_partner_fragment import TransactionPartnerFragment
 from .transaction_partner_other import TransactionPartnerOther

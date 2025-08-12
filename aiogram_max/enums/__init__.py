@@ -33,6 +33,7 @@ from .transaction_partner_user_transaction_type_enum import (
     TransactionPartnerUserTransactionTypeEnum,
 )
 from .update_type import UpdateType
+from .message_link_type import MessageLinkType
 
 __all__ = (
     "BotCommandScopeType",
@@ -68,4 +69,5 @@ __all__ = (
     "TransactionPartnerType",
     "TransactionPartnerUserTransactionTypeEnum",
     "UpdateType",
+    "MessageLinkType",
 )
