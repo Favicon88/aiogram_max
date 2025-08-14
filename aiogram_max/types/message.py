@@ -4545,7 +4545,7 @@ class LinkedMessage(BaseModel):
     """Пользователь, отправивший сообщение."""
     chat_id: Optional[int] = None
     """Чат, в котором сообщение было изначально опубликовано. Только для пересланных сообщений."""
-    message: MessageBody
+    message: "MessageBody"
     """Схема, представляющая тело сообщения."""
 
 
@@ -4562,7 +4562,7 @@ class Message(MaybeInaccessibleMessage):
     Source: https://dev.max.ru/docs-api/objects/Message
     """
 
-    sender: Optional[User] = None
+    sender: Optional["User"] = None
     """Пользователь, отправивший сообщение."""
     recipient: Recipient
     """Получатель сообщения. Может быть пользователем или чатом."""
@@ -4572,7 +4572,7 @@ class Message(MaybeInaccessibleMessage):
     """Пересланное или ответное сообщение."""
     body: MessageBody
     """Содержимое сообщения. Текст + вложения. Может быть null, если сообщение содержит только пересланное сообщение."""
-    stat: Optional[MessageStat]
+    stat: Optional[MessageStat] = None
     """Статистика сообщения."""
-    url: Optional[str]
+    url: Optional[str] = None
     """Публичная ссылка на сообщение. Может быть null для диалогов или не публичных чатов."""

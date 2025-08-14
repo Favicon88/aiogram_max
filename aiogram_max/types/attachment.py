@@ -4,7 +4,7 @@ from .user import User
 from .keyboard import Keyboard
 
 
-class VideoThumbnail:
+class VideoThumbnail(BaseModel):
     """Миниатюра видео."""
 
     url: str

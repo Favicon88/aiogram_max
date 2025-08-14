@@ -72,7 +72,7 @@ from .get_my_short_description import GetMyShortDescription
 from .get_my_star_balance import GetMyStarBalance
 from .get_star_transactions import GetStarTransactions
 from .get_sticker_set import GetStickerSet
-from .get_updates import GetUpdates
+from .get_updates import GetUpdates, UpdatesResponse
 from .get_user_chat_boosts import GetUserChatBoosts
 from .get_user_profile_photos import GetUserProfilePhotos
 from .get_webhook_info import GetWebhookInfo
@@ -241,6 +241,7 @@ __all__ = (
     "GetStarTransactions",
     "GetStickerSet",
     "GetUpdates",
+    "UpdatesResponse",
     "GetUserChatBoosts",
     "GetUserProfilePhotos",
     "GetWebhookInfo",

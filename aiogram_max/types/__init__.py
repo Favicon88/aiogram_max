@@ -1,5 +1,5 @@
 from typing import List, Literal, Optional, Union
-
+from pydantic import BaseModel
 from .accepted_gift_types import AcceptedGiftTypes
 from .affiliate_info import AffiliateInfo
 from .animation import Animation
@@ -186,6 +186,7 @@ from .link_preview_options import LinkPreviewOptions
 from .location import Location
 from .location_address import LocationAddress
 from .login_url import LoginUrl
+from .markup_element import MarkupElement
 from .mask_position import MaskPosition
 from .maybe_inaccessible_message import MaybeInaccessibleMessage
 from .maybe_inaccessible_message_union import MaybeInaccessibleMessageUnion
@@ -307,6 +308,7 @@ from .unique_gift_info import UniqueGiftInfo
 from .unique_gift_model import UniqueGiftModel
 from .unique_gift_symbol import UniqueGiftSymbol
 from .update import Update
+from .updates_response import UpdatesResponse
 from .user import User
 from .user_chat_boosts import UserChatBoosts
 from .user_profile_photos import UserProfilePhotos
@@ -506,6 +508,7 @@ __all__ = (
     "Location",
     "LocationAddress",
     "LoginUrl",
+    "MarkupElement",
     "MaskPosition",
     "MaybeInaccessibleMessage",
     "MaybeInaccessibleMessageUnion",
@@ -621,8 +624,9 @@ __all__ = (
     "UniqueGiftInfo",
     "UniqueGiftModel",
     "UniqueGiftSymbol",
-    "Update",
     "User",
+    "Update",
+    "UpdatesResponse",
     "UserChatBoosts",
     "UserProfilePhotos",
     "UserShared",

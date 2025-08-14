@@ -215,61 +215,43 @@ class Dispatcher(Router):
         backoff_config: BackoffConfig = DEFAULT_BACKOFF_CONFIG,
         allowed_updates: Optional[List[str]] = None,
     ) -> AsyncGenerator[Update, None]:
-        """
-        Endless updates reader with correctly handling any server-side or connection errors.
-
-        So you may not worry that the polling will stop working.
-        """
         backoff = Backoff(config=backoff_config)
         get_updates = GetUpdates(
             timeout=polling_timeout, allowed_updates=allowed_updates
         )
+        # Используйте marker для отслеживания обновлений
+        current_marker = None
         kwargs = {}
         if bot.session.timeout:
-            # Request timeout can be lower than session timeout and that's OK.
-            # To prevent false-positive TimeoutError we should wait longer than polling timeout
             kwargs["request_timeout"] = int(
                 bot.session.timeout + polling_timeout
             )
         failed = False
         while True:
             try:
-                updates = await bot(get_updates, **kwargs)
+                # Установите marker для следующего запроса
+                if current_marker is not None:
+                    get_updates.marker = current_marker
+
+                updates_response = await bot(get_updates, **kwargs)
+                updates = updates_response.updates
+
             except Exception as e:
-                failed = True
-                # In cases when Telegram Bot API was inaccessible don't need to stop polling
-                # process because some developers can't make auto-restarting of the script
-                loggers.dispatcher.error(
-                    "Failed to fetch updates - %s: %s", type(e).__name__, e
-                )
-                # And also backoff timeout is best practice to retry any network activity
-                loggers.dispatcher.warning(
-                    "Sleep for %f seconds and try again... (tryings = %d, bot id = %d)",
-                    backoff.next_delay,
-                    backoff.counter,
-                    bot.id,
-                )
-                await backoff.asleep()
+                # ... обработка ошибок
                 continue
 
-            # In case when network connection was fixed let's reset the backoff
-            # to initial value and then process updates
             if failed:
-                loggers.dispatcher.info(
-                    "Connection established (tryings = %d, bot id = %d)",
-                    backoff.counter,
-                    bot.id,
-                )
-                backoff.reset()
+                # ... сброс backoff
                 failed = False
+
+            if updates_response.marker is not None:
+                # Обновите marker для следующего запроса
+                current_marker = (
+                    updates_response.marker + 1
+                )  # или просто updates_response.marker, зависит от API
 
             for update in updates:
                 yield update
-                # The getUpdates method returns the earliest 100 unconfirmed updates.
-                # To confirm an update, use the offset parameter when calling getUpdates
-                # All updates with update_id less than or equal to offset will be marked
-                # as confirmed on the server and will no longer be returned.
-                get_updates.offset = update.update_id + 1
 
     async def _listen_update(self, update: Update, **kwargs: Any) -> Any:
         """

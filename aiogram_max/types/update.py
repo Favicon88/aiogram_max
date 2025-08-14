@@ -240,14 +240,14 @@ class Callback(BaseModel):
     )
     callback_id: str = Field(description="Текущий ID клавиатуры")
     payload: Optional[str] = Field(description="Токен кнопки")
-    user: User = Field(description="Пользователь, нажавший на кнопку")
+    user: "User" = Field(description="Пользователь, нажавший на кнопку")
 
 
 class MessageCreatedUpdate(UpdateType):
     update_type: Literal["message_created"]
     timestamp: int
     """Unix-время, когда произошло событие."""
-    message: Message
+    message: "Message"
     """Новое созданное сообщение."""
     user_locale: Optional[str]
     """Текущий язык пользователя в формате IETF BCP 47. Доступно только в диалогах."""
@@ -257,8 +257,8 @@ class MessageCallbackUpdate(UpdateType):
     update_type: Literal["message_callback"]
     timestamp: int
     """Unix-время, когда произошло событие."""
-    callback: Callback
-    message: Message
+    callback: "Callback"
+    message: "Message"
     """Новое созданное сообщение."""
     user_locale: Optional[str]
     """Текущий язык пользователя в формате IETF BCP 47. Доступно только в диалогах."""
@@ -268,7 +268,7 @@ class MessageEditedUpdate(UpdateType):
     update_type: Literal["message_edited"]
     timestamp: int
     """Unix-время, когда произошло событие."""
-    message: Message
+    message: "Message"
     """Новое созданное сообщение."""
 
 
@@ -290,7 +290,7 @@ class BotAddedUpdate(UpdateType):
     """Unix-время, когда произошло событие."""
     chat_id: int
     """ID чата, куда был добавлен бот."""
-    user: User
+    user: "User"
     """Пользователь, добавивший бота в чат."""
     is_channel: bool
     """Указывает, был ли бот добавлен в канал или нет."""
@@ -302,7 +302,7 @@ class BotRemovedUpdate(UpdateType):
     """Unix-время, когда произошло событие."""
     chat_id: int
     """ID чата, откуда был удален бот."""
-    user: User
+    user: "User"
     """Пользователь, удаливший бота из чата."""
     is_channel: bool
     """Указывает, был ли бот удален из канала или нет."""
@@ -314,7 +314,7 @@ class UserAddedUpdate(UpdateType):
     """Unix-время, когда произошло событие."""
     chat_id: int
     """ID чата, где произошло событие."""
-    user: User
+    user: "User"
     """Пользователь, добавленный в чат."""
     inviter_id: Optional[int] = None
     """Пользователь, который добавил пользователя в чат. Может быть null, если пользователь присоединился к чату по ссылке."""
@@ -328,7 +328,7 @@ class UserRemovedUpdate(UpdateType):
     """Unix-время, когда произошло событие."""
     chat_id: int
     """ID чата, где произошло событие."""
-    user: User
+    user: "User"
     """Пользователь, удаленный из чата."""
     admin_id: Optional[int] = None
     """Администратор, который удалил пользователя из чата. Может быть null, если пользователь покинул чат сам."""
@@ -342,7 +342,7 @@ class BotStartedUpdate(UpdateType):
     """Unix-время, когда произошло событие."""
     chat_id: int
     """ID диалога, где произошло событие."""
-    user: User
+    user: "User"
     """Пользователь, который нажал кнопку 'Start'."""
     payload: Optional[str] = None
     """до 512 символов Дополнительные данные из дип-линков, переданные при запуске бота."""
@@ -356,7 +356,7 @@ class ChatTitleChangedUpdate(UpdateType):
     """Unix-время, когда произошло событие."""
     chat_id: int
     """ID чата, где произошло событие."""
-    user: User
+    user: "User"
     """Пользователь, который изменил название."""
     title: str
     """Новое название."""
@@ -366,7 +366,7 @@ class MessageChatCreatedUpdate(UpdateType):
     update_type: Literal["message_chat_created"]
     timestamp: int
     """Unix-время, когда произошло событие."""
-    chat: Chat
+    chat: "Chat"
     """Созданный чат."""
     message_id: str
     """ID сообщения, где была нажата кнопка."""
@@ -384,6 +384,8 @@ Update = Union[
     UserAddedUpdate,
     UserRemovedUpdate,
     BotStartedUpdate,
+    ChatTitleChangedUpdate,
+    MessageChatCreatedUpdate,
 ]
 
 
