@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from ..utils.mypy_hacks import lru_cache
 from .base import TelegramObject
 from .user import User
+from .chat import Chat
 
 if TYPE_CHECKING:
     from .business_connection import BusinessConnection

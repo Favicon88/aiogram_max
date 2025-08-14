@@ -4,6 +4,7 @@ from .accepted_gift_types import AcceptedGiftTypes
 from .affiliate_info import AffiliateInfo
 from .animation import Animation
 from .attachment import Attachment
+from .attachment_request import AttachmentRequest
 from .audio import Audio
 from .background_fill import BackgroundFill
 from .background_fill_freeform_gradient import BackgroundFillFreeformGradient
@@ -108,6 +109,7 @@ from .giveaway import Giveaway
 from .giveaway_completed import GiveawayCompleted
 from .giveaway_created import GiveawayCreated
 from .giveaway_winners import GiveawayWinners
+from .image import Image
 from .inaccessible_message import InaccessibleMessage
 from .inline_keyboard_button import InlineKeyboardButton
 from .inline_keyboard_markup import InlineKeyboardMarkup
@@ -173,6 +175,7 @@ from .input_story_content_video import InputStoryContentVideo
 from .input_text_message_content import InputTextMessageContent
 from .input_venue_message_content import InputVenueMessageContent
 from .invoice import Invoice
+from .keyboard import InlineKeyboardAttachmentRequestPayload, Keyboard
 from .keyboard_button import KeyboardButton
 from .keyboard_button_poll_type import KeyboardButtonPollType
 from .keyboard_button_request_chat import KeyboardButtonRequestChat
@@ -326,6 +329,8 @@ __all__ = (
     "AcceptedGiftTypes",
     "AffiliateInfo",
     "Animation",
+    "Attachment",
+    "AttachmentRequest",
     "Audio",
     "BackgroundFill",
     "BackgroundFillFreeformGradient",
@@ -489,6 +494,8 @@ __all__ = (
     "InputTextMessageContent",
     "InputVenueMessageContent",
     "Invoice",
+    "Keyboard",
+    "InlineKeyboardAttachmentRequestPayload",
     "KeyboardButton",
     "KeyboardButtonPollType",
     "KeyboardButtonRequestChat",

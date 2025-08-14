@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any, Optional
 from ..utils import markdown
 from ..utils.link import create_tg_link
 from .base import TelegramObject
+from pydantic import Field
 
 if TYPE_CHECKING:
     from ..methods import GetUserProfilePhotos
@@ -114,3 +115,11 @@ class User(TelegramObject):
             limit=limit,
             **kwargs,
         ).as_(self._bot)
+
+
+class UserWithPhoto(User):
+    description: Optional[str] = Field(
+        description="до 16000 символов Описание пользователя. Может быть null, если пользователь его не заполнил"
+    )
+    avatar_url: Optional[str] = Field(description="URL аватара")
+    full_avatar_url: Optional[str] = Field(description="URL аватара")

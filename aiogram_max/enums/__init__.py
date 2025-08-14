@@ -2,6 +2,7 @@ from .bot_command_scope_type import BotCommandScopeType
 from .chat_action import ChatAction
 from .chat_boost_source_type import ChatBoostSourceType
 from .chat_member_status import ChatMemberStatus
+from .chat_status import ChatStatus
 from .chat_type import ChatType
 from .content_type import ContentType
 from .currency import Currency
@@ -40,6 +41,7 @@ __all__ = (
     "ChatAction",
     "ChatBoostSourceType",
     "ChatMemberStatus",
+    "ChatStatus",
     "ChatType",
     "ContentType",
     "Currency",

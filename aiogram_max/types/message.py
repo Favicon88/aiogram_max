@@ -1,8 +1,7 @@
 from __future__ import annotations
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union, Literal
-from pydantic import BaseModel
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 from aiogram_max.utils.text_decorations import (
     TextDecoration,

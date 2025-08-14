@@ -16,4 +16,4 @@ from enum import Enum
 
 
 class ChatType(str, Enum):
-    type = "chat"
+    chat = "chat"

@@ -82,3 +82,9 @@ class Keyboard(BaseModel):
     """Клавиатура - это двумерный массив кнопок."""
 
     buttons: List[TypeButton]
+
+
+class InlineKeyboardAttachmentRequestPayload(BaseModel):
+    """Клавиатура - это двумерный массив кнопок."""
+
+    buttons: List[TypeButton]
