@@ -29,6 +29,7 @@ from .sticker_format import StickerFormat
 from .sticker_type import StickerType
 from .story_area_type_type import StoryAreaTypeType
 from .topic_icon_color import TopicIconColor
+from .text_format import TextFormat
 from .transaction_partner_type import TransactionPartnerType
 from .transaction_partner_user_transaction_type_enum import (
     TransactionPartnerUserTransactionTypeEnum,
@@ -67,6 +68,7 @@ __all__ = (
     "StickerFormat",
     "StickerType",
     "StoryAreaTypeType",
+    "TextFormat",
     "TopicIconColor",
     "TransactionPartnerType",
     "TransactionPartnerUserTransactionTypeEnum",

@@ -1,10 +1,12 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 from .attachment_request import AttachmentRequest
+from ..enums import MessageLinkType, TextFormat
 
 
 class NewMessageLink(BaseModel):
-    
+    type: Optional[MessageLinkType]
+    mid: str = Field(description="ID сообщения исходного сообщения")
 
 
 class NewMessageBody(BaseModel):
