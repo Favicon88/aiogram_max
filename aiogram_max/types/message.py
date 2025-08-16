@@ -8,6 +8,7 @@ from aiogram_max.utils.text_decorations import (
     html_decoration,
     markdown_decoration,
 )
+from .attachment import KeyboardAttachment, Keyboard
 
 from ..client.default import Default
 from ..enums import ContentType, ChatType, MessageLinkType
@@ -4524,6 +4525,13 @@ class Recipient(BaseModel):
     chat_type: Optional[ChatType] = None
     user_id: Optional[int] = None
 
+    @property
+    def id(self) -> int:
+        """
+        Alias для aiogram.types.Message.chat.id
+        """
+        return self.chat_id
+
 
 class MessageBody(BaseModel):
     mid: str
@@ -4576,3 +4584,233 @@ class Message(MaybeInaccessibleMessage):
     """Статистика сообщения."""
     url: Optional[str] = None
     """Публичная ссылка на сообщение. Может быть null для диалогов или не публичных чатов."""
+
+    @property
+    def from_user(self) -> Optional[User]:
+        """
+        Alias для aiogram.types.Message.from_user
+        """
+        return self.sender
+
+    @property
+    def chat(self) -> Optional[Recipient]:
+        """
+        Alias для aiogram.types.Message.chat
+        """
+        return self.recipient
+
+    @property
+    def text(self) -> Optional[str]:
+        """
+        Alias для aiogram.types.Message.text
+        """
+        return self.body.text
+
+    @property
+    def reply_markup(self) -> Optional[Keyboard]:
+        """
+        Alias для aiogram.types.Message.reply_markup
+        """
+        # Проверяем, существует ли body и attachments
+        if not self.body or not self.body.attachments:
+            return None
+        for attachment in self.body.attachments:
+            # Проверяем, является ли вложение KeyboardAttachment
+            if isinstance(attachment, KeyboardAttachment):
+                return attachment.payload
+
+    def send_copy(  # noqa: C901
+        self: Message,
+        chat_id: Union[str, int],
+        disable_notification: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        reply_parameters: Optional[ReplyParameters] = None,
+        reply_markup: Union[
+            InlineKeyboardMarkup, ReplyKeyboardMarkup, None
+        ] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        message_thread_id: Optional[int] = None,
+        business_connection_id: Optional[str] = None,
+        parse_mode: Optional[str] = None,
+        message_effect_id: Optional[str] = None,
+    ) -> Union[
+        ForwardMessage,
+        SendAnimation,
+        SendAudio,
+        SendContact,
+        SendDocument,
+        SendLocation,
+        SendMessage,
+        SendPhoto,
+        SendPoll,
+        SendDice,
+        SendSticker,
+        SendVenue,
+        SendVideo,
+        SendVideoNote,
+        SendVoice,
+    ]:
+        """
+        Send copy of a message.
+
+        Is similar to :meth:`aiogram.client.bot.Bot.copy_message`
+        but returning the sent message instead of :class:`aiogram.types.message_id.MessageId`
+
+        .. note::
+
+            This method doesn't use the API method named `copyMessage` and
+            historically implemented before the similar method is added to API
+
+        :param chat_id:
+        :param disable_notification:
+        :param reply_to_message_id:
+        :param reply_parameters:
+        :param reply_markup:
+        :param allow_sending_without_reply:
+        :param message_thread_id:
+        :param business_connection_id:
+        :param parse_mode:
+        :return:
+        """
+        from ..methods import (
+            ForwardMessage,
+            SendAnimation,
+            SendAudio,
+            SendContact,
+            SendDice,
+            SendDocument,
+            SendLocation,
+            SendMessage,
+            SendPhoto,
+            SendPoll,
+            SendSticker,
+            SendVenue,
+            SendVideo,
+            SendVideoNote,
+            SendVoice,
+        )
+
+        kwargs: Dict[str, Any] = {
+            "chat_id": chat_id,
+            "reply_markup": reply_markup or self.reply_markup,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_parameters": reply_parameters,
+            "message_thread_id": message_thread_id,
+            "business_connection_id": business_connection_id,
+            "allow_sending_without_reply": allow_sending_without_reply,
+            # when sending a copy, we don't need any parse mode
+            # because all entities are already prepared
+            "parse_mode": parse_mode,
+        }
+
+        if self.text:
+            return SendMessage(
+                text=self.text,
+                **kwargs,
+            ).as_(self._bot)
+        if self.audio:
+            return SendAudio(
+                audio=self.audio.file_id,
+                caption=self.caption,
+                title=self.audio.title,
+                performer=self.audio.performer,
+                duration=self.audio.duration,
+                caption_entities=self.caption_entities,
+                **kwargs,
+            ).as_(self._bot)
+        if self.animation:
+            return SendAnimation(
+                animation=self.animation.file_id,
+                caption=self.caption,
+                caption_entities=self.caption_entities,
+                **kwargs,
+            ).as_(self._bot)
+        if self.document:
+            return SendDocument(
+                document=self.document.file_id,
+                caption=self.caption,
+                caption_entities=self.caption_entities,
+                **kwargs,
+            ).as_(self._bot)
+        if self.photo:
+            return SendPhoto(
+                photo=self.photo[-1].file_id,
+                caption=self.caption,
+                caption_entities=self.caption_entities,
+                **kwargs,
+            ).as_(self._bot)
+        if self.sticker:
+            return SendSticker(
+                sticker=self.sticker.file_id,
+                **kwargs,
+            ).as_(self._bot)
+        if self.video:
+            return SendVideo(
+                video=self.video.file_id,
+                caption=self.caption,
+                caption_entities=self.caption_entities,
+                **kwargs,
+            ).as_(self._bot)
+        if self.video_note:
+            return SendVideoNote(
+                video_note=self.video_note.file_id,
+                **kwargs,
+            ).as_(self._bot)
+        if self.voice:
+            return SendVoice(
+                voice=self.voice.file_id,
+                **kwargs,
+            ).as_(self._bot)
+        if self.contact:
+            return SendContact(
+                phone_number=self.contact.phone_number,
+                first_name=self.contact.first_name,
+                last_name=self.contact.last_name,
+                vcard=self.contact.vcard,
+                **kwargs,
+            ).as_(self._bot)
+        if self.venue:
+            return SendVenue(
+                latitude=self.venue.location.latitude,
+                longitude=self.venue.location.longitude,
+                title=self.venue.title,
+                address=self.venue.address,
+                foursquare_id=self.venue.foursquare_id,
+                foursquare_type=self.venue.foursquare_type,
+                **kwargs,
+            ).as_(self._bot)
+        if self.location:
+            return SendLocation(
+                latitude=self.location.latitude,
+                longitude=self.location.longitude,
+                **kwargs,
+            ).as_(self._bot)
+        if self.poll:
+            from .input_poll_option import InputPollOption
+
+            return SendPoll(
+                question=self.poll.question,
+                options=[
+                    InputPollOption(
+                        text=option.text,
+                        voter_count=option.voter_count,
+                        text_entities=option.text_entities,
+                        text_parse_mode=None,
+                    )
+                    for option in self.poll.options
+                ],
+                **kwargs,
+            ).as_(self._bot)
+        if self.dice:  # Dice value can't be controlled
+            return SendDice(
+                **kwargs,
+            ).as_(self._bot)
+        if self.story:
+            return ForwardMessage(
+                from_chat_id=self.chat.id,
+                message_id=self.message_id,
+                **kwargs,
+            ).as_(self._bot)
+
+        raise TypeError("This type of message can't be copied.")

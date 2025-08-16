@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Final, Generator, List, Optional, Set
 
-from ..types import TelegramObject
+from ..types import TelegramObject, Update
 from .event.bases import REJECTED, UNHANDLED
 from .event.event import EventObserver
 from .event.telegram import TelegramEventObserver
@@ -32,31 +32,55 @@ class Router:
         self.sub_routers: List[Router] = []
 
         # Observers
-        self.message = TelegramEventObserver(router=self, event_name="message")
-        self.edited_message = TelegramEventObserver(router=self, event_name="edited_message")
-        self.channel_post = TelegramEventObserver(router=self, event_name="channel_post")
+        self.message = TelegramEventObserver(
+            router=self, event_name="message_created"
+        )
+        self.edited_message = TelegramEventObserver(
+            router=self, event_name="message_edited"
+        )
+        self.channel_post = TelegramEventObserver(
+            router=self, event_name="channel_post"
+        )
         self.edited_channel_post = TelegramEventObserver(
             router=self, event_name="edited_channel_post"
         )
-        self.inline_query = TelegramEventObserver(router=self, event_name="inline_query")
+        self.inline_query = TelegramEventObserver(
+            router=self, event_name="inline_query"
+        )
         self.chosen_inline_result = TelegramEventObserver(
             router=self, event_name="chosen_inline_result"
         )
-        self.callback_query = TelegramEventObserver(router=self, event_name="callback_query")
-        self.shipping_query = TelegramEventObserver(router=self, event_name="shipping_query")
+        self.callback_query = TelegramEventObserver(
+            router=self, event_name="callback_query"
+        )
+        self.shipping_query = TelegramEventObserver(
+            router=self, event_name="shipping_query"
+        )
         self.pre_checkout_query = TelegramEventObserver(
             router=self, event_name="pre_checkout_query"
         )
         self.poll = TelegramEventObserver(router=self, event_name="poll")
-        self.poll_answer = TelegramEventObserver(router=self, event_name="poll_answer")
-        self.my_chat_member = TelegramEventObserver(router=self, event_name="my_chat_member")
-        self.chat_member = TelegramEventObserver(router=self, event_name="chat_member")
-        self.chat_join_request = TelegramEventObserver(router=self, event_name="chat_join_request")
-        self.message_reaction = TelegramEventObserver(router=self, event_name="message_reaction")
+        self.poll_answer = TelegramEventObserver(
+            router=self, event_name="poll_answer"
+        )
+        self.my_chat_member = TelegramEventObserver(
+            router=self, event_name="my_chat_member"
+        )
+        self.chat_member = TelegramEventObserver(
+            router=self, event_name="chat_member"
+        )
+        self.chat_join_request = TelegramEventObserver(
+            router=self, event_name="chat_join_request"
+        )
+        self.message_reaction = TelegramEventObserver(
+            router=self, event_name="message_reaction"
+        )
         self.message_reaction_count = TelegramEventObserver(
             router=self, event_name="message_reaction_count"
         )
-        self.chat_boost = TelegramEventObserver(router=self, event_name="chat_boost")
+        self.chat_boost = TelegramEventObserver(
+            router=self, event_name="chat_boost"
+        )
         self.removed_chat_boost = TelegramEventObserver(
             router=self, event_name="removed_chat_boost"
         )
@@ -69,19 +93,23 @@ class Router:
         self.edited_business_message = TelegramEventObserver(
             router=self, event_name="edited_business_message"
         )
-        self.business_message = TelegramEventObserver(router=self, event_name="business_message")
+        self.business_message = TelegramEventObserver(
+            router=self, event_name="business_message"
+        )
         self.purchased_paid_media = TelegramEventObserver(
             router=self, event_name="purchased_paid_media"
         )
 
-        self.errors = self.error = TelegramEventObserver(router=self, event_name="error")
+        self.errors = self.error = TelegramEventObserver(
+            router=self, event_name="error"
+        )
 
         self.startup = EventObserver()
         self.shutdown = EventObserver()
 
         self.observers: Dict[str, TelegramEventObserver] = {
-            "message": self.message,
-            "edited_message": self.edited_message,
+            "message_created": self.message,
+            "message_edited": self.edited_message,
             "channel_post": self.channel_post,
             "edited_channel_post": self.edited_channel_post,
             "inline_query": self.inline_query,
@@ -112,7 +140,9 @@ class Router:
     def __repr__(self) -> str:
         return f"<{self}>"
 
-    def resolve_used_update_types(self, skip_events: Optional[Set[str]] = None) -> List[str]:
+    def resolve_used_update_types(
+        self, skip_events: Optional[Set[str]] = None
+    ) -> List[str]:
         """
         Resolve registered event names
 
@@ -133,24 +163,31 @@ class Router:
 
         return list(sorted(handlers_in_use))  # NOQA: C413
 
-    async def propagate_event(self, update_type: str, event: TelegramObject, **kwargs: Any) -> Any:
+    async def propagate_event(
+        self, update_type: str, event: Update, **kwargs: Any
+    ) -> Any:
         kwargs.update(event_router=self)
         observer = self.observers.get(update_type)
 
-        async def _wrapped(telegram_event: TelegramObject, **data: Any) -> Any:
+        async def _wrapped(telegram_event: Update, **data: Any) -> Any:
             return await self._propagate_event(
-                observer=observer, update_type=update_type, event=telegram_event, **data
+                observer=observer,
+                update_type=update_type,
+                event=telegram_event,
+                **data,
             )
 
         if observer:
-            return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+            return await observer.wrap_outer_middleware(
+                _wrapped, event=event, data=kwargs
+            )
         return await _wrapped(event, **kwargs)
 
     async def _propagate_event(
         self,
         observer: Optional[TelegramEventObserver],
         update_type: str,
-        event: TelegramObject,
+        event: Update,
         **kwargs: Any,
     ) -> Any:
         response = UNHANDLED
@@ -171,7 +208,9 @@ class Router:
                 return response
 
         for router in self.sub_routers:
-            response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+            response = await router.propagate_event(
+                update_type=update_type, event=event, **kwargs
+            )
             if response is not UNHANDLED:
                 break
 
@@ -206,16 +245,22 @@ class Router:
         :param router:
         """
         if not isinstance(router, Router):
-            raise ValueError(f"router should be instance of Router not {type(router).__name__!r}")
+            raise ValueError(
+                f"router should be instance of Router not {type(router).__name__!r}"
+            )
         if self._parent_router:
-            raise RuntimeError(f"Router is already attached to {self._parent_router!r}")
+            raise RuntimeError(
+                f"Router is already attached to {self._parent_router!r}"
+            )
         if self == router:
             raise RuntimeError("Self-referencing routers is not allowed")
 
         parent: Optional[Router] = router
         while parent is not None:
             if parent == self:
-                raise RuntimeError("Circular referencing of Router is not allowed")
+                raise RuntimeError(
+                    "Circular referencing of Router is not allowed"
+                )
 
             parent = parent.parent_router
 

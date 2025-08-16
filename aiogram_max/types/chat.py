@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 from aiogram_max.enums.chat_type import ChatType
 
@@ -1404,3 +1404,12 @@ class Chat(BaseModel):
     pinned_message: Optional[Message] = Field(
         description="Закреплённое сообщение в чате (возвращается только при запросе конкретного чата)"
     )
+
+    model_config = ConfigDict(extra="ignore")
+
+    @property
+    def id(self) -> int:
+        """
+        Alias для aiogram.types.Message.chat.id
+        """
+        return self.chat_id

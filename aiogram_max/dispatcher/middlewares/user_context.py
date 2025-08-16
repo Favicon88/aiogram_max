@@ -9,6 +9,8 @@ from aiogram_max.types import (
     TelegramObject,
     Update,
     User,
+    MessageCreatedUpdate,
+    MessageEditedUpdate,
 )
 
 EVENT_CONTEXT_KEY = "event_context"
@@ -27,11 +29,11 @@ class EventContext:
 
     @property
     def user_id(self) -> Optional[int]:
-        return self.user.id if self.user else None
+        return self.user.user_id if self.user else None
 
     @property
     def chat_id(self) -> Optional[int]:
-        return self.chat.id if self.chat else None
+        return self.chat.chat_id if self.chat else None
 
 
 class UserContextMiddleware(BaseMiddleware):
@@ -64,25 +66,17 @@ class UserContextMiddleware(BaseMiddleware):
         """
         Resolve chat and user instance from Update object
         """
-        if event.message:
+        if event.update_type == "message_created":
             return EventContext(
                 chat=event.message.chat,
                 user=event.message.from_user,
-                thread_id=(
-                    event.message.message_thread_id
-                    if event.message.is_topic_message
-                    else None
-                ),
+                thread_id=None,
             )
-        if event.edited_message:
+        if event.update_type == "message_edited":
             return EventContext(
-                chat=event.edited_message.chat,
-                user=event.edited_message.from_user,
-                thread_id=(
-                    event.edited_message.message_thread_id
-                    if event.edited_message.is_topic_message
-                    else None
-                ),
+                chat=event.message.chat,
+                user=event.message.from_user,
+                thread_id=None,
             )
         if event.channel_post:
             return EventContext(chat=event.channel_post.chat)

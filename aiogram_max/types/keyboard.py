@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union, Literal
 from enum import Enum
 
@@ -18,6 +18,8 @@ class Intent(str, Enum):
 
 class ButtonBase(BaseModel):
     type: str  # discriminator, но будет конкретизирован в наследниках
+
+    model_config = ConfigDict(extra="ignore")
 
 
 class CallbackButton(ButtonBase):
@@ -82,6 +84,8 @@ class Keyboard(BaseModel):
     """Клавиатура - это двумерный массив кнопок."""
 
     buttons: List[TypeButton]
+
+    model_config = ConfigDict(extra="ignore")
 
 
 class InlineKeyboardAttachmentRequestPayload(BaseModel):

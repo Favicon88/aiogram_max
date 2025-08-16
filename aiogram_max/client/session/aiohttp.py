@@ -29,6 +29,7 @@ from aiohttp.http import SERVER_SOFTWARE
 
 from aiogram_max.__meta__ import __version__
 from aiogram_max.methods import MaxMethod
+from aiogram_max.methods.send_message import SendMessage
 
 from ...exceptions import TelegramNetworkError
 from ...methods.base import TelegramType
@@ -163,19 +164,44 @@ class AiohttpSession(BaseSession):
     def build_form_data(
         self, bot: Bot, method: MaxMethod[TelegramType]
     ) -> FormData:
-        form = FormData(quote_fields=False)
-        files: Dict[str, InputFile] = {}
-        for key, value in method.model_dump(warnings=False).items():
-            value = self.prepare_value(value, bot=bot, files=files)
-            if not value:
-                continue
-            form.add_field(key, value)
-        for key, value in files.items():
-            form.add_field(
-                key,
-                value.read(bot),
-                filename=value.filename or key,
-            )
+        if isinstance(method, SendMessage):
+            payload: dict[str, Any] = {}
+
+            if method.text is not None:
+                payload["text"] = method.text
+
+            if getattr(method, "attachments", None):
+                # attachments — список Pydantic-моделей
+                payload["attachments"] = [
+                    att.model_dump(exclude_none=True)
+                    for att in method.attachments
+                ]
+
+            if getattr(method, "link", None):
+                # link — объект Pydantic-модели
+                payload["link"] = method.link.model_dump(exclude_none=True)
+
+            if getattr(method, "notify", None) is not None:
+                payload["notify"] = method.notify
+
+            if getattr(method, "format", None):
+                payload["format"] = method.format
+
+            return {"json": payload}
+        else:
+            form = FormData(quote_fields=False)
+            files: Dict[str, InputFile] = {}
+            for key, value in method.model_dump(warnings=False).items():
+                value = self.prepare_value(value, bot=bot, files=files)
+                if not value:
+                    continue
+                form.add_field(key, value)
+            for key, value in files.items():
+                form.add_field(
+                    key,
+                    value.read(bot),
+                    filename=value.filename or key,
+                )
         return form
 
     async def make_request(
@@ -200,7 +226,11 @@ class AiohttpSession(BaseSession):
             "timeout": self.timeout if timeout is None else timeout,
         }
         if http_method in ("POST", "PATCH"):
-            kwargs["data"] = form  # aiohttp сам примет FormData или dict
+            if isinstance(method, SendMessage):
+                url += f"&chat_id={method.chat_id}"
+                kwargs = form
+            else:
+                kwargs["data"] = form  # aiohttp сам примет FormData или dict
         elif http_method == "GET":
             # params должен быть только dict или последовательность пар
             if hasattr(form, "items"):

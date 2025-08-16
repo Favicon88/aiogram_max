@@ -208,6 +208,7 @@ from .message_origin_union import MessageOriginUnion
 from .message_origin_user import MessageOriginUser
 from .message_reaction_count_updated import MessageReactionCountUpdated
 from .message_reaction_updated import MessageReactionUpdated
+from .message_response import MessageResponse
 from .order_info import OrderInfo
 from .owned_gift import OwnedGift
 from .owned_gift_regular import OwnedGiftRegular
@@ -307,7 +308,7 @@ from .unique_gift_backdrop_colors import UniqueGiftBackdropColors
 from .unique_gift_info import UniqueGiftInfo
 from .unique_gift_model import UniqueGiftModel
 from .unique_gift_symbol import UniqueGiftSymbol
-from .update import Update
+from .update import Update, MessageEditedUpdate, MessageCreatedUpdate
 from .updates_response import UpdatesResponse
 from .user import User
 from .user_chat_boosts import UserChatBoosts
@@ -519,6 +520,9 @@ __all__ = (
     "MenuButtonUnion",
     "MenuButtonWebApp",
     "Message",
+    "MessageResponse",
+    "MessageCreatedUpdate",
+    "MessageEditedUpdate",
     "MessageAutoDeleteTimerChanged",
     "MessageEntity",
     "MessageId",

@@ -24,15 +24,20 @@ class GetUpdates(MaxMethod[UpdatesResponse]):
 
     limit: Optional[int] = Field(
         None,
-        "Максимальное количество обновлений для получения. По умолчанию: 100",
+        description="Максимальное количество обновлений для получения. По умолчанию: 100",
     )
-    timeout: Optional[int] = None
-    """Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling. Should be positive, short polling should be used for testing purposes only."""
-    marker: Optional[int] = None
-    """Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as :class:`aiogram.methods.get_updates.GetUpdates` is called with an *offset* higher than its *update_id*. The negative offset can be specified to retrieve updates starting from *-offset* update from the end of the updates queue. All previous updates will be forgotten."""
-
-    allowed_updates: Optional[list[str]] = None
-    """A JSON-serialized list of the update types you want your bot to receive. For example, specify :code:`["message", "edited_channel_post", "callback_query"]` to only receive updates of these types. See :class:`aiogram.types.update.Update` for a complete list of available update types. Specify an empty list to receive all update types except *chat_member*, *message_reaction*, and *message_reaction_count* (default). If not specified, the previous setting will be used."""
+    timeout: Optional[int] = Field(
+        None,
+        description="По умолчанию: 100 Максимальное количество обновлений для получения",
+    )
+    marker: Optional[int] = Field(
+        None,
+        description="Если передан, бот получит обновления, которые еще не были получены. Если не передан, получит все новые обновления",
+    )
+    types: Optional[list[str]] = Field(
+        None,
+        description="Пример: types=message_created,message_callback Список типов обновлений, которые бот хочет получить (например, message_created, message_callback)я",
+    )
 
     if TYPE_CHECKING:
         # DO NOT EDIT MANUALLY!!!
@@ -41,10 +46,10 @@ class GetUpdates(MaxMethod[UpdatesResponse]):
         def __init__(
             __pydantic__self__,
             *,
-            offset: Optional[int] = None,
             limit: Optional[int] = None,
             timeout: Optional[int] = None,
-            allowed_updates: Optional[list[str]] = None,
+            marker: Optional[int] = None,
+            types: Optional[list[str]] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             # DO NOT EDIT MANUALLY!!!
@@ -52,9 +57,9 @@ class GetUpdates(MaxMethod[UpdatesResponse]):
             # Is needed only for type checking and IDE support without any additional plugins
 
             super().__init__(
-                offset=offset,
                 limit=limit,
                 timeout=timeout,
-                allowed_updates=allowed_updates,
+                marker=marker,
+                types=types,
                 **__pydantic_kwargs,
             )

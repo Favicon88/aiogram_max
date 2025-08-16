@@ -3,10 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
 
 from aiogram_max.dispatcher.middlewares.manager import MiddlewareManager
-
 from ...exceptions import UnsupportedKeywordArgument
 from ...filters.base import Filter
-from ...types import TelegramObject
+from ...types import TelegramObject, Update
 from .bases import UNHANDLED, MiddlewareType, SkipHandler
 from .handler import CallbackType, FilterObject, HandlerObject
 
@@ -94,7 +93,7 @@ class TelegramEventObserver:
         return callback
 
     def wrap_outer_middleware(
-        self, callback: Any, event: TelegramObject, data: Dict[str, Any]
+        self, callback: Any, event: Update, data: Dict[str, Any]
     ) -> Any:
         wrapped_outer = self.middleware.wrap_middlewares(
             self.outer_middleware,
@@ -102,10 +101,10 @@ class TelegramEventObserver:
         )
         return wrapped_outer(event, data)
 
-    def check_root_filters(self, event: TelegramObject, **kwargs: Any) -> Any:
+    def check_root_filters(self, event: Update, **kwargs: Any) -> Any:
         return self._handler.check(event, **kwargs)
 
-    async def trigger(self, event: TelegramObject, **kwargs: Any) -> Any:
+    async def trigger(self, event: Update, **kwargs: Any) -> Any:
         """
         Propagate event to handlers and stops propagation on first match.
         Handler will be called when all its filters are pass.

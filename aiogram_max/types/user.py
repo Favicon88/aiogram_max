@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any, Optional
 from ..utils import markdown
 from ..utils.link import create_tg_link
 from .base import TelegramObject
-from pydantic import Field
+from pydantic import Field, ConfigDict
 
 if TYPE_CHECKING:
     from ..methods import GetUserProfilePhotos
@@ -63,6 +63,8 @@ class User(TelegramObject):
                 last_activity_time=last_activity_time,
                 **__pydantic_kwargs,
             )
+
+    model_config = ConfigDict(extra="ignore")
 
     @property
     def full_name(self) -> str:

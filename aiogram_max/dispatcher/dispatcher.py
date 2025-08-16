@@ -157,7 +157,7 @@ class Dispatcher(Router):
         handled = False
         start_time = loop.time()
 
-        if update.bot != bot:
+        if update.message.bot != bot:
             # Re-mounting update to the current bot instance for making possible to
             # use it in shortcuts.
             # Here is update is re-created because we need to propagate context to
@@ -185,8 +185,8 @@ class Dispatcher(Router):
             finish_time = loop.time()
             duration = (finish_time - start_time) * 1000
             loggers.event.info(
-                "Update id=%s is %s. Duration %d ms by bot id=%d",
-                update.update_id,
+                "Update update_type=%s is %s. Duration %d ms by bot id=%d",
+                update.update_type,
                 "handled" if handled else "not handled",
                 duration,
                 bot.id,
@@ -266,8 +266,8 @@ class Dispatcher(Router):
         :return:
         """
         try:
-            update_type = update.event_type
-            event = update.event
+            update_type = update.update_type
+            event = update.message
         except UpdateTypeLookupError as e:
             warnings.warn(
                 "Detected unknown update type.\n"
@@ -326,8 +326,8 @@ class Dispatcher(Router):
 
         except Exception as e:
             loggers.event.exception(
-                "Cause exception while process update id=%d by bot id=%d\n%s: %s",
-                update.update_id,
+                "Cause exception while process update update_type=%d by bot id=%d\n%s: %s",
+                update.update_type,
                 bot.id,
                 e.__class__.__name__,
                 e,
@@ -431,8 +431,8 @@ class Dispatcher(Router):
             return await self.feed_update(bot, update, **kwargs)
         except Exception as e:
             loggers.event.exception(
-                "Cause exception while process update id=%d by bot id=%d\n%s: %s",
-                update.update_id,
+                "Cause exception while process update update_type=%d by bot id=%d\n%s: %s",
+                update.update_type,
                 bot.id,
                 e.__class__.__name__,
                 e,

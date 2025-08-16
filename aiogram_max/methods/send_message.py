@@ -12,6 +12,7 @@ from ..types import (
     MessageEntity,
     ReplyMarkupUnion,
     ReplyParameters,
+    MessageResponse,
 )
 from .base import TelegramMethod
 
@@ -23,8 +24,8 @@ class SendMessage(TelegramMethod[Message]):
     Source: https://core.telegram.org/bots/api#sendmessage
     """
 
-    __returning__ = Message
-    __api_method__ = "sendMessage"
+    __returning__ = MessageResponse
+    __api_method__ = "messages"
 
     chat_id: ChatIdUnion
     """Unique identifier for the target chat or username of the target channel (in the format :code:`@channelusername`)"""
@@ -38,11 +39,15 @@ class SendMessage(TelegramMethod[Message]):
     """Mode for parsing entities in the message text. See `formatting options <https://core.telegram.org/bots/api#formatting-options>`_ for more details."""
     entities: Optional[list[MessageEntity]] = None
     """A JSON-serialized list of special entities that appear in message text, which can be specified instead of *parse_mode*"""
-    link_preview_options: Optional[Union[LinkPreviewOptions, Default]] = Default("link_preview")
+    link_preview_options: Optional[Union[LinkPreviewOptions, Default]] = (
+        Default("link_preview")
+    )
     """Link preview generation options for the message"""
     disable_notification: Optional[bool] = None
     """Sends the message `silently <https://telegram.org/blog/channels-2-0#silent-messages>`_. Users will receive a notification with no sound."""
-    protect_content: Optional[Union[bool, Default]] = Default("protect_content")
+    protect_content: Optional[Union[bool, Default]] = Default(
+        "protect_content"
+    )
     """Protects the contents of the sent message from forwarding and saving"""
     allow_paid_broadcast: Optional[bool] = None
     """Pass :code:`True` to allow up to 1000 messages per second, ignoring `broadcasting limits <https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once>`_ for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance"""
@@ -60,13 +65,16 @@ class SendMessage(TelegramMethod[Message]):
 .. deprecated:: API:7.0
    https://core.telegram.org/bots/api-changelog#december-29-2023"""
     disable_web_page_preview: Optional[Union[bool, Default]] = Field(
-        Default("link_preview_is_disabled"), json_schema_extra={"deprecated": True}
+        Default("link_preview_is_disabled"),
+        json_schema_extra={"deprecated": True},
     )
     """Disables link previews for links in this message
 
 .. deprecated:: API:7.0
    https://core.telegram.org/bots/api-changelog#december-29-2023"""
-    reply_to_message_id: Optional[int] = Field(None, json_schema_extra={"deprecated": True})
+    reply_to_message_id: Optional[int] = Field(
+        None, json_schema_extra={"deprecated": True}
+    )
     """If the message is a reply, ID of the original message
 
 .. deprecated:: API:7.0
@@ -85,11 +93,13 @@ class SendMessage(TelegramMethod[Message]):
             message_thread_id: Optional[int] = None,
             parse_mode: Optional[Union[str, Default]] = Default("parse_mode"),
             entities: Optional[list[MessageEntity]] = None,
-            link_preview_options: Optional[Union[LinkPreviewOptions, Default]] = Default(
-                "link_preview"
-            ),
+            link_preview_options: Optional[
+                Union[LinkPreviewOptions, Default]
+            ] = Default("link_preview"),
             disable_notification: Optional[bool] = None,
-            protect_content: Optional[Union[bool, Default]] = Default("protect_content"),
+            protect_content: Optional[Union[bool, Default]] = Default(
+                "protect_content"
+            ),
             allow_paid_broadcast: Optional[bool] = None,
             message_effect_id: Optional[str] = None,
             reply_parameters: Optional[ReplyParameters] = None,
