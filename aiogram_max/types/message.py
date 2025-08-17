@@ -4619,6 +4619,84 @@ class Message(MaybeInaccessibleMessage):
             if isinstance(attachment, KeyboardAttachment):
                 return attachment.payload
 
+    def answer(
+        self,
+        text: str,
+        parse_mode: Optional[Union[str, Default]] = Default("parse_mode"),
+        entities: Optional[list[MessageEntity]] = None,
+        link_preview_options: Optional[
+            Union[LinkPreviewOptions, Default]
+        ] = Default("link_preview"),
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[Union[bool, Default]] = Default(
+            "protect_content"
+        ),
+        allow_paid_broadcast: Optional[bool] = None,
+        message_effect_id: Optional[str] = None,
+        reply_parameters: Optional[ReplyParameters] = None,
+        reply_markup: Optional[ReplyMarkupUnion] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        disable_web_page_preview: Optional[Union[bool, Default]] = Default(
+            "link_preview_is_disabled"
+        ),
+        reply_to_message_id: Optional[int] = None,
+        **kwargs: Any,
+    ) -> SendMessage:
+        """
+        Shortcut for method :class:`aiogram.methods.send_message.SendMessage`
+        will automatically fill method attributes:
+
+        - :code:`chat_id`
+        - :code:`message_thread_id`
+
+
+        Use this method to send text messages. On success, the sent :class:`aiogram.types.message.Message` is returned.
+
+        Source: https://core.telegram.org/bots/api#sendmessage
+
+        :param text: Text of the message to be sent, 1-4096 characters after entities parsing
+        :param parse_mode: Mode for parsing entities in the message text. See `formatting options <https://core.telegram.org/bots/api#formatting-options>`_ for more details.
+        :param entities: A JSON-serialized list of special entities that appear in message text, which can be specified instead of *parse_mode*
+        :param link_preview_options: Link preview generation options for the message
+        :param disable_notification: Sends the message `silently <https://telegram.org/blog/channels-2-0#silent-messages>`_. Users will receive a notification with no sound.
+        :param protect_content: Protects the contents of the sent message from forwarding and saving
+        :param allow_paid_broadcast: Pass :code:`True` to allow up to 1000 messages per second, ignoring `broadcasting limits <https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once>`_ for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+        :param message_effect_id: Unique identifier of the message effect to be added to the message; for private chats only
+        :param reply_parameters: Description of the message to reply to
+        :param reply_markup: Additional interface options. A JSON-serialized object for an `inline keyboard <https://core.telegram.org/bots/features#inline-keyboards>`_, `custom reply keyboard <https://core.telegram.org/bots/features#keyboards>`_, instructions to remove a reply keyboard or to force a reply from the user
+        :param allow_sending_without_reply: Pass :code:`True` if the message should be sent even if the specified replied-to message is not found
+        :param disable_web_page_preview: Disables link previews for links in this message
+        :param reply_to_message_id: If the message is a reply, ID of the original message
+        :return: instance of method :class:`aiogram.methods.send_message.SendMessage`
+        """
+        # DO NOT EDIT MANUALLY!!!
+        # This method was auto-generated via `butcher`
+
+        from aiogram_max.methods import SendMessage
+
+        assert (
+            self.chat is not None
+        ), "This method can be used only if chat is present in the message."
+
+        return SendMessage(
+            chat_id=self.chat.id,
+            message_thread_id=None,
+            text=text,
+            parse_mode=parse_mode,
+            entities=entities,
+            link_preview_options=link_preview_options,
+            disable_notification=disable_notification,
+            protect_content=protect_content,
+            allow_paid_broadcast=allow_paid_broadcast,
+            message_effect_id=message_effect_id,
+            reply_parameters=reply_parameters,
+            reply_markup=reply_markup,
+            allow_sending_without_reply=allow_sending_without_reply,
+            disable_web_page_preview=disable_web_page_preview,
+            reply_to_message_id=reply_to_message_id,
+            **kwargs,
+        ).as_(self._bot)
+
     def send_copy(  # noqa: C901
         self: Message,
         chat_id: Union[str, int],
