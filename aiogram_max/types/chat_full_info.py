@@ -27,7 +27,7 @@ class ChatFullInfo(Chat):
     Source: https://core.telegram.org/bots/api#chatfullinfo
     """
 
-    id: int
+    # id: int
     """Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier."""
     type: str
     """Type of the chat, can be either 'private', 'group', 'supergroup' or 'channel'"""
@@ -117,7 +117,9 @@ class ChatFullInfo(Chat):
     """*Optional*. Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier."""
     location: Optional[ChatLocation] = None
     """*Optional*. For supergroups, the location to which the supergroup is connected"""
-    can_send_gift: Optional[bool] = Field(None, json_schema_extra={"deprecated": True})
+    can_send_gift: Optional[bool] = Field(
+        None, json_schema_extra={"deprecated": True}
+    )
     """*Optional*. :code:`True`, if gifts can be sent to the chat
 
 .. deprecated:: API:9.0
@@ -130,7 +132,7 @@ class ChatFullInfo(Chat):
         def __init__(
             __pydantic__self__,
             *,
-            id: int,
+            # id: int,
             type: str,
             accent_color_id: int,
             max_reaction_count: int,
@@ -183,7 +185,7 @@ class ChatFullInfo(Chat):
             # Is needed only for type checking and IDE support without any additional plugins
 
             super().__init__(
-                id=id,
+                # id=id,
                 type=type,
                 accent_color_id=accent_color_id,
                 max_reaction_count=max_reaction_count,

@@ -181,6 +181,12 @@ class AiohttpSession(BaseSession):
                 # link — объект Pydantic-модели
                 payload["link"] = method.link.model_dump(exclude_none=True)
 
+            if getattr(method, "reply_parameters", None):
+                payload["link"] = {
+                    "type": "reply",
+                    "mid": method.reply_parameters.message_id,
+                }
+
             if getattr(method, "notify", None) is not None:
                 payload["notify"] = method.notify
 

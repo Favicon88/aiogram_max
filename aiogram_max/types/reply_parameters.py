@@ -17,7 +17,7 @@ class ReplyParameters(TelegramObject):
     Source: https://core.telegram.org/bots/api#replyparameters
     """
 
-    message_id: int
+    message_id: int | str
     """Identifier of the message that will be replied to in the current chat, or in the chat *chat_id* if it is specified"""
     chat_id: Optional[ChatIdUnion] = None
     """*Optional*. If the message to be replied to is from a different chat, unique identifier for the chat or username of the channel (in the format :code:`@channelusername`). Not supported for messages sent on behalf of a business account."""
@@ -41,13 +41,15 @@ class ReplyParameters(TelegramObject):
         def __init__(
             __pydantic__self__,
             *,
-            message_id: int,
+            message_id: int | str,
             chat_id: Optional[ChatIdUnion] = None,
-            allow_sending_without_reply: Optional[Union[bool, Default]] = Default(
-                "allow_sending_without_reply"
-            ),
+            allow_sending_without_reply: Optional[
+                Union[bool, Default]
+            ] = Default("allow_sending_without_reply"),
             quote: Optional[str] = None,
-            quote_parse_mode: Optional[Union[str, Default]] = Default("parse_mode"),
+            quote_parse_mode: Optional[Union[str, Default]] = Default(
+                "parse_mode"
+            ),
             quote_entities: Optional[list[MessageEntity]] = None,
             quote_position: Optional[int] = None,
             **__pydantic_kwargs: Any,

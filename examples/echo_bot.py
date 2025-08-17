@@ -9,7 +9,7 @@ from aiogram_max.enums import ParseMode
 from aiogram_max.filters import CommandStart
 from aiogram_max.types import Message
 
-# Bot token can be obtained via https://t.me/BotFather
+# Bot token can be obtained via https://max.ru/MasterBot
 TOKEN = getenv("BOT_TOKEN")
 
 # All handlers should be attached to the Router (or Dispatcher)

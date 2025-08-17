@@ -4,7 +4,7 @@ import sys
 from os import getenv
 from typing import Any, Dict
 
-from aiogram import Bot, Dispatcher, F, Router, html
+from aiogram_max import Bot, Dispatcher, F, Router, html
 from aiogram_max.client.default import DefaultBotProperties
 from aiogram_max.enums import ParseMode
 from aiogram_max.filters import Command, CommandStart
