@@ -4,12 +4,15 @@ from dataclasses import dataclass, field
 from os import getenv
 from typing import Any
 
-from aiogram import Bot, Dispatcher, F, Router, html
+from aiogram_max import Bot, Dispatcher, F, Router, html
 from aiogram_max.filters import Command
 from aiogram_max.fsm.context import FSMContext
 from aiogram_max.fsm.scene import Scene, SceneRegistry, ScenesManager, on
 from aiogram_max.fsm.storage.memory import SimpleEventIsolation
-from aiogram_max.types import KeyboardButton, Message, ReplyKeyboardRemove
+from aiogram_max.types import (
+    Message,
+    InlineKeyboardButton,
+)
 from aiogram_max.utils.formatting import (
     Bold,
     as_key_value,
@@ -17,7 +20,7 @@ from aiogram_max.utils.formatting import (
     as_numbered_list,
     as_section,
 )
-from aiogram_max.utils.keyboard import ReplyKeyboardBuilder
+from aiogram_max.utils.keyboard import InlineKeyboardBuilder
 
 TOKEN = getenv("BOT_TOKEN")
 
@@ -135,9 +138,12 @@ class QuizScene(Scene, state="quiz"):
             # This error means that the question's list is over
             return await self.wizard.exit()
 
-        markup = ReplyKeyboardBuilder()
+        markup = InlineKeyboardBuilder()
         markup.add(
-            *[KeyboardButton(text=answer.text) for answer in quiz.answers]
+            *[
+                InlineKeyboardButton(text=answer.text)
+                for answer in quiz.answers
+            ]
         )
 
         if step > 0:
@@ -195,9 +201,7 @@ class QuizScene(Scene, state="quiz"):
             ),
         )
 
-        await message.answer(
-            **content.as_kwargs(), reply_markup=ReplyKeyboardRemove()
-        )
+        await message.answer(**content.as_kwargs())
         await state.set_data({})
 
     @on.message(F.text == "🔙 Back")
@@ -274,8 +278,7 @@ quiz_router.message.register(QuizScene.as_handler(), Command("quiz"))
 async def command_start(message: Message, scenes: ScenesManager):
     await scenes.close()
     await message.answer(
-        "Hi! This is a quiz bot. To start the quiz, use the /quiz command.",
-        reply_markup=ReplyKeyboardRemove(),
+        "Hi! This is a quiz bot. To start the quiz, use the /quiz command."
     )
 
 

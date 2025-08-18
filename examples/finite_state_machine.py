@@ -67,7 +67,7 @@ async def process_name(message: Message, state: FSMContext) -> None:
     await message.answer(
         f"Nice to meet you, {html.quote(message.text)}!\nDid you like to write bots?",
         reply_markup=InlineKeyboardMarkup(
-            keyboard=[
+            inline_keyboard=[
                 [
                     InlineKeyboardButton(text="Yes"),
                     InlineKeyboardButton(text="No"),

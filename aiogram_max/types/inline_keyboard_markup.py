@@ -51,7 +51,7 @@ class InlineKeyboardMarkup(MutableTelegramObject):
 
     type: Literal["inline_keyboard"] = "inline_keyboard"
 
-    keyboard: list[list[InlineKeyboardButton]]
+    inline_keyboard: list[list[InlineKeyboardButton]]
     """Array of button rows, each represented by an Array of :class:`aiogram.types.inline_keyboard_button.InlineKeyboardButton` objects"""
 
     def to_max_payload(self) -> Keyboard:
@@ -61,7 +61,7 @@ class InlineKeyboardMarkup(MutableTelegramObject):
         max_buttons: List[TypeButton] = []
 
         # Проходим по всем строкам
-        for row in self.keyboard:
+        for row in self.inline_keyboard:
             # Проходим по всем кнопкам в строке
             for button in row:
                 if button.callback_data:

@@ -24,17 +24,17 @@ from aiogram_max.types import (
     CopyTextButton,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    KeyboardButton,
+    # KeyboardButton,
     KeyboardButtonPollType,
     KeyboardButtonRequestChat,
     KeyboardButtonRequestUsers,
     LoginUrl,
-    ReplyKeyboardMarkup,
+    # ReplyKeyboardMarkup,
     SwitchInlineQueryChosenChat,
     WebAppInfo,
 )
 
-ButtonType = TypeVar("ButtonType", InlineKeyboardButton, KeyboardButton)
+ButtonType = TypeVar("ButtonType", bound=InlineKeyboardButton)
 T = TypeVar("T")
 
 
@@ -54,7 +54,7 @@ class KeyboardBuilder(Generic[ButtonType], ABC):
         button_type: Type[ButtonType],
         markup: Optional[List[List[ButtonType]]] = None,
     ) -> None:
-        if not issubclass(button_type, (InlineKeyboardButton, KeyboardButton)):
+        if not issubclass(button_type, (InlineKeyboardButton,)):
             raise ValueError(f"Button type {button_type} are not allowed here")
         self._button_type: Type[ButtonType] = button_type
         if markup:
@@ -274,12 +274,10 @@ class KeyboardBuilder(Generic[ButtonType], ABC):
         button = self._button_type(**kwargs)
         return self.add(button)
 
-    def as_markup(
-        self, **kwargs: Any
-    ) -> Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]:
-        if self._button_type is KeyboardButton:
-            keyboard = cast(List[List[KeyboardButton]], self.export())  # type: ignore
-            return ReplyKeyboardMarkup(keyboard=keyboard, **kwargs)
+    def as_markup(self, **kwargs: Any) -> Union[InlineKeyboardMarkup,]:
+        # if self._button_type is KeyboardButton:
+        #     keyboard = cast(List[List[KeyboardButton]], self.export())  # type: ignore
+        #     return ReplyKeyboardMarkup(keyboard=keyboard, **kwargs)
         inline_keyboard = cast(List[List[InlineKeyboardButton]], self.export())  # type: ignore
         return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
 
@@ -392,66 +390,66 @@ class InlineKeyboardBuilder(KeyboardBuilder[InlineKeyboardButton]):
         return cls(markup=markup.inline_keyboard)
 
 
-class ReplyKeyboardBuilder(KeyboardBuilder[KeyboardButton]):
-    """
-    Reply keyboard builder inherits all methods from generic builder
-    """
+# class ReplyKeyboardBuilder(KeyboardBuilder[KeyboardButton]):
+#     """
+#     Reply keyboard builder inherits all methods from generic builder
+#     """
 
-    max_width: int = 10
-    min_width: int = 1
-    max_buttons: int = 300
+#     max_width: int = 10
+#     min_width: int = 1
+#     max_buttons: int = 300
 
-    def button(
-        self,
-        *,
-        text: str,
-        request_users: Optional[KeyboardButtonRequestUsers] = None,
-        request_chat: Optional[KeyboardButtonRequestChat] = None,
-        request_contact: Optional[bool] = None,
-        request_location: Optional[bool] = None,
-        request_poll: Optional[KeyboardButtonPollType] = None,
-        web_app: Optional[WebAppInfo] = None,
-        **kwargs: Any,
-    ) -> "ReplyKeyboardBuilder":
-        return cast(
-            ReplyKeyboardBuilder,
-            self._button(
-                text=text,
-                request_users=request_users,
-                request_chat=request_chat,
-                request_contact=request_contact,
-                request_location=request_location,
-                request_poll=request_poll,
-                web_app=web_app,
-                **kwargs,
-            ),
-        )
+#     def button(
+#         self,
+#         *,
+#         text: str,
+#         request_users: Optional[KeyboardButtonRequestUsers] = None,
+#         request_chat: Optional[KeyboardButtonRequestChat] = None,
+#         request_contact: Optional[bool] = None,
+#         request_location: Optional[bool] = None,
+#         request_poll: Optional[KeyboardButtonPollType] = None,
+#         web_app: Optional[WebAppInfo] = None,
+#         **kwargs: Any,
+#     ) -> "ReplyKeyboardBuilder":
+#         return cast(
+#             ReplyKeyboardBuilder,
+#             self._button(
+#                 text=text,
+#                 request_users=request_users,
+#                 request_chat=request_chat,
+#                 request_contact=request_contact,
+#                 request_location=request_location,
+#                 request_poll=request_poll,
+#                 web_app=web_app,
+#                 **kwargs,
+#             ),
+#         )
 
-    def as_markup(self, **kwargs: Any) -> ReplyKeyboardMarkup:
-        """Construct a ReplyKeyboardMarkup"""
-        return cast(ReplyKeyboardMarkup, super().as_markup(**kwargs))
+#     def as_markup(self, **kwargs: Any) -> ReplyKeyboardMarkup:
+#         """Construct a ReplyKeyboardMarkup"""
+#         return cast(ReplyKeyboardMarkup, super().as_markup(**kwargs))
 
-    def __init__(
-        self, markup: Optional[List[List[KeyboardButton]]] = None
-    ) -> None:
-        super().__init__(button_type=KeyboardButton, markup=markup)
+#     def __init__(
+#         self, markup: Optional[List[List[KeyboardButton]]] = None
+#     ) -> None:
+#         super().__init__(button_type=KeyboardButton, markup=markup)
 
-    def copy(self: "ReplyKeyboardBuilder") -> "ReplyKeyboardBuilder":
-        """
-        Make full copy of current builder with markup
+#     def copy(self: "ReplyKeyboardBuilder") -> "ReplyKeyboardBuilder":
+#         """
+#         Make full copy of current builder with markup
 
-        :return:
-        """
-        return ReplyKeyboardBuilder(markup=self.export())
+#         :return:
+#         """
+#         return ReplyKeyboardBuilder(markup=self.export())
 
-    @classmethod
-    def from_markup(
-        cls, markup: ReplyKeyboardMarkup
-    ) -> "ReplyKeyboardBuilder":
-        """
-        Create builder from existing markup
+#     @classmethod
+#     def from_markup(
+#         cls, markup: ReplyKeyboardMarkup
+#     ) -> "ReplyKeyboardBuilder":
+#         """
+#         Create builder from existing markup
 
-        :param markup:
-        :return:
-        """
-        return cls(markup=markup.keyboard)
+#         :param markup:
+#         :return:
+#         """
+#         return cls(markup=markup.keyboard)

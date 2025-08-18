@@ -4,9 +4,9 @@ from os import getenv
 from typing import Any, Dict, Union
 
 from aiohttp import web
-from finite_state_machine import form_router
+from .finite_state_machine import form_router
 
-from aiogram import Bot, Dispatcher, F, Router
+from aiogram_max import Bot, Dispatcher, F, Router
 from aiogram_max.client.session.aiohttp import AiohttpSession
 from aiogram_max.enums import ParseMode
 from aiogram_max.exceptions import TelegramUnauthorizedError

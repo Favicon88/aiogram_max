@@ -38,7 +38,12 @@ from aiogram_max.utils.class_attrs_resolver import (
 
 
 class HistoryManager:
-    def __init__(self, state: FSMContext, destiny: str = "scenes_history", size: int = 10):
+    def __init__(
+        self,
+        state: FSMContext,
+        destiny: str = "scenes_history",
+        size: int = 10,
+    ):
         self._size = size
         self._state = state
         self._history_state = FSMContext(
@@ -91,7 +96,9 @@ class HistoryManager:
         data = await self._state.get_data()
         await self.push(state, data)
 
-    async def _set_state(self, state: Optional[str], data: Dict[str, Any]) -> None:
+    async def _set_state(
+        self, state: Optional[str], data: Dict[str, Any]
+    ) -> None:
         await self._state.set_state(state)
         await self._state.set_data(data)
 
@@ -161,7 +168,9 @@ class ObserverDecorator:
         return ActionContainer(self.name, self.filters, SceneAction.leave)
 
     def enter(self, target: Type[Scene]) -> ActionContainer:
-        return ActionContainer(self.name, self.filters, SceneAction.enter, target)
+        return ActionContainer(
+            self.name, self.filters, SceneAction.enter, target
+        )
 
     def exit(self) -> ActionContainer:
         return ActionContainer(self.name, self.filters, SceneAction.exit)
@@ -268,7 +277,7 @@ class SceneHandlerWrapper:
                 scene_config=self.scene.__scene_config__,
                 manager=scenes,
                 state=state,
-                update_type=event_update.event_type,
+                update_type=event_update.update_type,
                 event=event,
                 data=kwargs,
             )
@@ -325,13 +334,17 @@ class Scene:
         state_name = kwargs.pop("state", None)
         reset_data_on_enter = kwargs.pop("reset_data_on_enter", None)
         reset_history_on_enter = kwargs.pop("reset_history_on_enter", None)
-        callback_query_without_state = kwargs.pop("callback_query_without_state", None)
+        callback_query_without_state = kwargs.pop(
+            "callback_query_without_state", None
+        )
         attrs_resolver = kwargs.pop("attrs_resolver", None)
 
         super().__init_subclass__(**kwargs)
 
         handlers: list[HandlerContainer] = []
-        actions: defaultdict[SceneAction, Dict[str, CallableObject]] = defaultdict(dict)
+        actions: defaultdict[SceneAction, Dict[str, CallableObject]] = (
+            defaultdict(dict)
+        )
 
         for base in cls.__bases__:
             if not issubclass(base, Scene):
@@ -344,9 +357,13 @@ class Scene:
             if reset_data_on_enter is None:
                 reset_data_on_enter = parent_scene_config.reset_data_on_enter
             if reset_history_on_enter is None:
-                reset_history_on_enter = parent_scene_config.reset_history_on_enter
+                reset_history_on_enter = (
+                    parent_scene_config.reset_history_on_enter
+                )
             if callback_query_without_state is None:
-                callback_query_without_state = parent_scene_config.callback_query_without_state
+                callback_query_without_state = (
+                    parent_scene_config.callback_query_without_state
+                )
             if attrs_resolver is None:
                 attrs_resolver = parent_scene_config.attrs_resolver
 
@@ -366,7 +383,10 @@ class Scene:
                     )
                 )
             if hasattr(value, "__aiogram_action__"):
-                for action, action_handlers in value.__aiogram_action__.items():
+                for (
+                    action,
+                    action_handlers,
+                ) in value.__aiogram_action__.items():
                     actions[action].update(action_handlers)
 
         cls.__scene_config__ = SceneConfig(
@@ -403,9 +423,14 @@ class Scene:
             used_observers.add(handler.name)
 
         for observer_name in used_observers:
-            if scene_config.callback_query_without_state and observer_name == "callback_query":
+            if (
+                scene_config.callback_query_without_state
+                and observer_name == "callback_query"
+            ):
                 continue
-            router.observers[observer_name].filter(StateFilter(scene_config.state))
+            router.observers[observer_name].filter(
+                StateFilter(scene_config.state)
+            )
 
     @classmethod
     def as_router(cls, name: Optional[str] = None) -> Router:
@@ -433,7 +458,9 @@ class Scene:
         """
 
         async def enter_to_scene_handler(
-            event: TelegramObject, scenes: ScenesManager, **middleware_kwargs: Any
+            event: TelegramObject,
+            scenes: ScenesManager,
+            **middleware_kwargs: Any,
         ) -> None:
             await scenes.enter(cls, **{**handler_kwargs, **middleware_kwargs})
 
@@ -533,7 +560,9 @@ class SceneWizard:
         :param kwargs: Keyword arguments that can be passed to the method.
         :return: None
         """
-        loggers.scene.debug("Back to previous scene from scene %s", self.scene_config.state)
+        loggers.scene.debug(
+            "Back to previous scene from scene %s", self.scene_config.state
+        )
         await self.leave(_with_history=False, **kwargs)
         new_scene = await self.manager.history.rollback()
         await self.manager.enter(new_scene, _check_active=False, **kwargs)
@@ -545,10 +574,14 @@ class SceneWizard:
         :param kwargs: Additional keyword arguments to pass to the scene.
         :return: None
         """
-        assert self.scene_config.state is not None, "Scene state is not specified"
+        assert (
+            self.scene_config.state is not None
+        ), "Scene state is not specified"
         await self.goto(self.scene_config.state, **kwargs)
 
-    async def goto(self, scene: Union[Type[Scene], State, str], **kwargs: Any) -> None:
+    async def goto(
+        self, scene: Union[Type[Scene], State, str], **kwargs: Any
+    ) -> None:
         """
         The `goto` method transitions to a new scene.
         It first calls the `leave` method to perform any necessary cleanup
@@ -567,11 +600,15 @@ class SceneWizard:
         if not self.scene:
             raise SceneException("Scene is not initialized")
 
-        loggers.scene.debug("Call action %r in scene %r", action.name, self.scene_config.state)
+        loggers.scene.debug(
+            "Call action %r in scene %r", action.name, self.scene_config.state
+        )
         action_config = self.scene_config.actions.get(action, {})
         if not action_config:
             loggers.scene.debug(
-                "Action %r not found in scene %r", action.name, self.scene_config.state
+                "Action %r not found in scene %r",
+                action.name,
+                self.scene_config.state,
             )
             return False
 
@@ -585,7 +622,9 @@ class SceneWizard:
             )
             return False
 
-        await action_config[event_type].call(self.scene, self.event, **{**self.data, **kwargs})
+        await action_config[event_type].call(
+            self.scene, self.event, **{**self.data, **kwargs}
+        )
         return True
 
     async def set_data(self, data: Mapping[str, Any]) -> None:
@@ -628,7 +667,9 @@ class SceneWizard:
         """
         pass
 
-    async def get_value(self, key: str, default: Optional[Any] = None) -> Optional[Any]:
+    async def get_value(
+        self, key: str, default: Optional[Any] = None
+    ) -> Optional[Any]:
         return await self.state.get_value(key, default)
 
     async def update_data(
@@ -676,7 +717,9 @@ class ScenesManager:
 
         self.history = HistoryManager(self.state)
 
-    async def _get_scene(self, scene_type: Optional[Union[Type[Scene], State, str]]) -> Scene:
+    async def _get_scene(
+        self, scene_type: Optional[Union[Type[Scene], State, str]]
+    ) -> Scene:
         scene_type = self.registry.get(scene_type)
         return scene_type(
             wizard=SceneWizard(
@@ -771,15 +814,15 @@ class SceneRegistry:
     async def _update_middleware(
         self,
         handler: NextMiddlewareType[TelegramObject],
-        event: TelegramObject,
+        event: Update,
         data: Dict[str, Any],
     ) -> Any:
         assert isinstance(event, Update), "Event must be an Update instance"
 
         data["scenes"] = ScenesManager(
             registry=self,
-            update_type=event.event_type,
-            event=event.event,
+            update_type=event.update_type,
+            event=event.message,
             state=data["state"],
             data=data,
         )
@@ -794,14 +837,16 @@ class SceneRegistry:
         update: Update = data["event_update"]
         data["scenes"] = ScenesManager(
             registry=self,
-            update_type=update.event_type,
+            update_type=update.update_type,
             event=event,
             state=data["state"],
             data=data,
         )
         return await handler(event, data)
 
-    def add(self, *scenes: Type[Scene], router: Optional[Router] = None) -> None:
+    def add(
+        self, *scenes: Type[Scene], router: Optional[Router] = None
+    ) -> None:
         """
         This method adds the specified scenes to the registry
         and optionally registers it to the router.
@@ -844,7 +889,9 @@ class SceneRegistry:
         """
         self.add(*scenes, router=self.router)
 
-    def get(self, scene: Optional[Union[Type[Scene], State, str]]) -> Type[Scene]:
+    def get(
+        self, scene: Optional[Union[Type[Scene], State, str]]
+    ) -> Type[Scene]:
         """
         This method returns the registered Scene object for the specified scene.
         The scene parameter can be either a Scene object, State object or a string representing
@@ -865,7 +912,9 @@ class SceneRegistry:
         if isinstance(scene, State):
             scene = scene.state
         if scene is not None and not isinstance(scene, str):
-            raise SceneException("Scene must be a subclass of Scene, State or a string")
+            raise SceneException(
+                "Scene must be a subclass of Scene, State or a string"
+            )
 
         try:
             return self._scenes[scene]
@@ -947,8 +996,8 @@ class OnMarker:
         This is a marker class and does not contain any methods or implementation logic.
     """
 
-    message = ObserverMarker("message")
-    edited_message = ObserverMarker("edited_message")
+    message = ObserverMarker("message_created")
+    edited_message = ObserverMarker("message_edited")
     channel_post = ObserverMarker("channel_post")
     edited_channel_post = ObserverMarker("edited_channel_post")
     inline_query = ObserverMarker("inline_query")
