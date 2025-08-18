@@ -11,10 +11,9 @@ from aiogram_max.filters import Command, CommandStart
 from aiogram_max.fsm.context import FSMContext
 from aiogram_max.fsm.state import State, StatesGroup
 from aiogram_max.types import (
-    KeyboardButton,
     Message,
-    ReplyKeyboardMarkup,
-    ReplyKeyboardRemove,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
 )
 
 TOKEN = getenv("BOT_TOKEN")
@@ -33,7 +32,14 @@ async def command_start(message: Message, state: FSMContext) -> None:
     await state.set_state(Form.name)
     await message.answer(
         "Hi there! What's your name?",
-        reply_markup=ReplyKeyboardRemove(),
+    )
+
+
+@form_router.message(Command("language"))
+async def command_start(message: Message, state: FSMContext) -> None:
+    await state.set_state(Form.language)
+    await message.answer(
+        "Hi there! What's your language?",
     )
 
 
@@ -51,7 +57,6 @@ async def cancel_handler(message: Message, state: FSMContext) -> None:
     await state.clear()
     await message.answer(
         "Cancelled.",
-        reply_markup=ReplyKeyboardRemove(),
     )
 
 
@@ -61,11 +66,11 @@ async def process_name(message: Message, state: FSMContext) -> None:
     await state.set_state(Form.like_bots)
     await message.answer(
         f"Nice to meet you, {html.quote(message.text)}!\nDid you like to write bots?",
-        reply_markup=ReplyKeyboardMarkup(
+        reply_markup=InlineKeyboardMarkup(
             keyboard=[
                 [
-                    KeyboardButton(text="Yes"),
-                    KeyboardButton(text="No"),
+                    InlineKeyboardButton(text="Yes"),
+                    InlineKeyboardButton(text="No"),
                 ]
             ],
             resize_keyboard=True,
@@ -81,7 +86,6 @@ async def process_dont_like_write_bots(
     await state.clear()
     await message.answer(
         "Not bad not terrible.\nSee you soon.",
-        reply_markup=ReplyKeyboardRemove(),
     )
     await show_summary(message=message, data=data, positive=False)
 
@@ -92,7 +96,6 @@ async def process_like_write_bots(message: Message, state: FSMContext) -> None:
 
     await message.reply(
         "Cool! I'm too!\nWhat programming language did you use for it?",
-        reply_markup=ReplyKeyboardRemove(),
     )
 
 
@@ -117,7 +120,7 @@ async def process_language(message: Message, state: FSMContext) -> None:
 async def show_summary(
     message: Message, data: Dict[str, Any], positive: bool = True
 ) -> None:
-    name = data["name"]
+    name = data.get("name", "<something unexpected>")
     language = data.get("language", "<something unexpected>")
     text = f"I'll keep in mind that, {html.quote(name)}, "
     text += (
@@ -125,7 +128,7 @@ async def show_summary(
         if positive
         else "you don't like to write bots, so sad..."
     )
-    await message.answer(text=text, reply_markup=ReplyKeyboardRemove())
+    await message.answer(text=text)
 
 
 async def main():

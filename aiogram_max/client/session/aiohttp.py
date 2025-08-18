@@ -33,7 +33,7 @@ from aiogram_max.methods.send_message import SendMessage
 
 from ...exceptions import TelegramNetworkError
 from ...methods.base import TelegramType
-from ...types import InputFile
+from ...types import InputFile, Attachment
 from .base import BaseSession
 
 if TYPE_CHECKING:
@@ -176,6 +176,12 @@ class AiohttpSession(BaseSession):
                     att.model_dump(exclude_none=True)
                     for att in method.attachments
                 ]
+
+            if getattr(method, "reply_markup", None):
+                # attachments — список Pydantic-моделей
+                payload["attachments"] = method.reply_markup.model_dump(
+                    exclude_none=True
+                )
 
             if getattr(method, "link", None):
                 # link — объект Pydantic-модели

@@ -16,7 +16,7 @@ class InlineKeyboardButton(MutableTelegramObject):
     """
     This object represents one button of an inline keyboard. Exactly one of the optional fields must be used to specify type of the button.
 
-    Source: https://core.telegram.org/bots/api#inlinekeyboardbutton
+    Source: https://dev.max.ru/docs-api
     """
 
     text: str
@@ -33,7 +33,9 @@ class InlineKeyboardButton(MutableTelegramObject):
     """*Optional*. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. May be empty, in which case just the bot's username will be inserted. Not supported for messages sent on behalf of a Telegram Business account."""
     switch_inline_query_current_chat: Optional[str] = None
     """*Optional*. If set, pressing the button will insert the bot's username and the specified inline query in the current chat's input field. May be empty, in which case only the bot's username will be inserted."""
-    switch_inline_query_chosen_chat: Optional[SwitchInlineQueryChosenChat] = None
+    switch_inline_query_chosen_chat: Optional[SwitchInlineQueryChosenChat] = (
+        None
+    )
     """*Optional*. If set, pressing the button will prompt the user to select one of their chats of the specified type, open that chat and insert the bot's username and the specified inline query in the input field. Not supported for messages sent on behalf of a Telegram Business account."""
     copy_text: Optional[CopyTextButton] = None
     """*Optional*. Description of the button that copies the specified text to the clipboard."""
@@ -43,8 +45,6 @@ class InlineKeyboardButton(MutableTelegramObject):
     """*Optional*. Specify :code:`True`, to send a `Pay button <https://core.telegram.org/bots/api#payments>`_. Substrings '⭐' and 'XTR' in the buttons's text will be replaced with a Telegram Star icon."""
 
     if TYPE_CHECKING:
-        # DO NOT EDIT MANUALLY!!!
-        # This section was auto-generated via `butcher`
 
         def __init__(
             __pydantic__self__,
@@ -56,16 +56,14 @@ class InlineKeyboardButton(MutableTelegramObject):
             login_url: Optional[LoginUrl] = None,
             switch_inline_query: Optional[str] = None,
             switch_inline_query_current_chat: Optional[str] = None,
-            switch_inline_query_chosen_chat: Optional[SwitchInlineQueryChosenChat] = None,
+            switch_inline_query_chosen_chat: Optional[
+                SwitchInlineQueryChosenChat
+            ] = None,
             copy_text: Optional[CopyTextButton] = None,
             callback_game: Optional[CallbackGame] = None,
             pay: Optional[bool] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
-            # DO NOT EDIT MANUALLY!!!
-            # This method was auto-generated via `butcher`
-            # Is needed only for type checking and IDE support without any additional plugins
-
             super().__init__(
                 text=text,
                 url=url,

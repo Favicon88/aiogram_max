@@ -97,7 +97,7 @@ class ContactAttachment(AttachmentBase):
 
 
 class KeyboardAttachment(AttachmentBase):
-    type: Literal["inline_keyboard"]
+    type: Literal["inline_keyboard"] = "inline_keyboard"
     payload: Keyboard
     """Клавиатура - это двумерный массив кнопок."""
 

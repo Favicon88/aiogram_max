@@ -23,7 +23,7 @@ class ButtonBase(BaseModel):
 
 
 class CallbackButton(ButtonBase):
-    type: Literal["callback"]
+    type: Literal["callback"] = "callback"
     text: str
     """от 1 до 128 символов. Видимый текст кнопки."""
     payload: str
@@ -33,7 +33,7 @@ class CallbackButton(ButtonBase):
 
 
 class LinkButton(ButtonBase):
-    type: Literal["link"]
+    type: Literal["link"] = "link"
     text: str
     """от 1 до 128 символов. Видимый текст кнопки."""
     url: str
@@ -41,7 +41,7 @@ class LinkButton(ButtonBase):
 
 
 class RequestGeoLocationButton(ButtonBase):
-    type: Literal["request_geo_location"]
+    type: Literal["request_geo_location"] = "request_geo_location"
     text: str
     """от 1 до 128 символов. Видимый текст кнопки."""
     quick: Optional[bool] = True
@@ -49,13 +49,13 @@ class RequestGeoLocationButton(ButtonBase):
 
 
 class RequestContactButton(ButtonBase):
-    type: Literal["request_contact"]
+    type: Literal["request_contact"] = "request_contact"
     text: str
     """от 1 до 128 символов. Видимый текст кнопки."""
 
 
 class OpenAppButton(ButtonBase):
-    type: Literal["open_app"]
+    type: Literal["open_app"] = "open_app"
     text: str
     """от 1 до 128 символов. Видимый текст кнопки."""
     web_app: Optional[str]
@@ -65,7 +65,7 @@ class OpenAppButton(ButtonBase):
 
 
 class MessageButton(ButtonBase):
-    type: Literal["message"]
+    type: Literal["message"] = "message"
     text: str
     """от 1 до 128 символов Текст кнопки, который будет отправлен в чат от лица пользователя."""
 
@@ -83,7 +83,7 @@ TypeButton = Union[
 class Keyboard(BaseModel):
     """Клавиатура - это двумерный массив кнопок."""
 
-    buttons: List[TypeButton]
+    buttons: List[List[TypeButton]]
 
     model_config = ConfigDict(extra="ignore")
 
@@ -91,4 +91,4 @@ class Keyboard(BaseModel):
 class InlineKeyboardAttachmentRequestPayload(BaseModel):
     """Клавиатура - это двумерный массив кнопок."""
 
-    buttons: List[TypeButton]
+    buttons: List[List[TypeButton]]
