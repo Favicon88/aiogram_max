@@ -45,6 +45,7 @@ from .business_opening_hours import BusinessOpeningHours
 from .business_opening_hours_interval import BusinessOpeningHoursInterval
 from .callback_game import CallbackGame
 from .callback_query import CallbackQuery
+from .callback_query_response import CallbackQueryResponse
 from .chat import Chat
 from .chat_administrator_rights import ChatAdministratorRights
 from .chat_background import ChatBackground
@@ -372,6 +373,7 @@ __all__ = (
     "BusinessOpeningHoursInterval",
     "CallbackGame",
     "CallbackQuery",
+    "CallbackQueryResponse",
     "Chat",
     "ChatAdministratorRights",
     "ChatBackground",

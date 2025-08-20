@@ -1,19 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union, Literal
-from enum import Enum
-
-
-class Intent(str, Enum):
-    """
-    По умолчанию: "default"
-    Enum: "positive" "negative" "default"
-
-    Намерение кнопки. Влияет на отображение клиентом.
-    """
-
-    default = "default"
-    positive = "positive"
-    negative = "negative"
+from ..enums import Intent
 
 
 class ButtonBase(BaseModel):
@@ -28,7 +15,7 @@ class CallbackButton(ButtonBase):
     """от 1 до 128 символов. Видимый текст кнопки."""
     payload: str
     """до 1024 символов. Токен кнопки"""
-    intent: Optional[Intent] = "default"
+    intent: Optional[Intent] = Intent.default
     """По умолчанию: "default" Enum: "positive" "negative" "default" Намерение кнопки. Влияет на отображение клиентом."""
 
 

@@ -28,8 +28,7 @@ from aiohttp.hdrs import USER_AGENT
 from aiohttp.http import SERVER_SOFTWARE
 
 from aiogram_max.__meta__ import __version__
-from aiogram_max.methods import MaxMethod
-from aiogram_max.methods.send_message import SendMessage
+from aiogram_max.methods import MaxMethod, AnswerCallbackQuery, SendMessage
 
 from ...exceptions import TelegramNetworkError
 from ...methods.base import TelegramType
@@ -200,6 +199,13 @@ class AiohttpSession(BaseSession):
                 payload["format"] = method.format
 
             return {"json": payload}
+        elif isinstance(method, AnswerCallbackQuery):
+            payload: dict[str, Any] = {}
+
+            if method.text is not None:
+                payload["text"] = method.text
+
+            return {"json": payload}
         else:
             form = FormData(quote_fields=False)
             files: Dict[str, InputFile] = {}
@@ -239,6 +245,9 @@ class AiohttpSession(BaseSession):
         }
         if http_method in ("POST", "PATCH"):
             if isinstance(method, SendMessage):
+                url += f"&chat_id={method.chat_id}"
+                kwargs = form
+            elif isinstance(method, AnswerCallbackQuery):
                 url += f"&chat_id={method.chat_id}"
                 kwargs = form
             else:

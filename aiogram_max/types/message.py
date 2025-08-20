@@ -4798,9 +4798,7 @@ class Message(MaybeInaccessibleMessage):
         disable_notification: Optional[bool] = None,
         reply_to_message_id: Optional[int] = None,
         reply_parameters: Optional[ReplyParameters] = None,
-        reply_markup: Union[
-            InlineKeyboardMarkup, ReplyKeyboardMarkup, None
-        ] = None,
+        reply_markup: Union[InlineKeyboardMarkup, None] = None,
         allow_sending_without_reply: Optional[bool] = None,
         message_thread_id: Optional[int] = None,
         business_connection_id: Optional[str] = None,

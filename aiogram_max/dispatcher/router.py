@@ -38,6 +38,9 @@ class Router:
         self.edited_message = TelegramEventObserver(
             router=self, event_name="message_edited"
         )
+        self.callback_query = TelegramEventObserver(
+            router=self, event_name="message_callback"
+        )
         self.channel_post = TelegramEventObserver(
             router=self, event_name="channel_post"
         )
@@ -50,9 +53,7 @@ class Router:
         self.chosen_inline_result = TelegramEventObserver(
             router=self, event_name="chosen_inline_result"
         )
-        self.callback_query = TelegramEventObserver(
-            router=self, event_name="callback_query"
-        )
+
         self.shipping_query = TelegramEventObserver(
             router=self, event_name="shipping_query"
         )
@@ -114,7 +115,7 @@ class Router:
             "edited_channel_post": self.edited_channel_post,
             "inline_query": self.inline_query,
             "chosen_inline_result": self.chosen_inline_result,
-            "callback_query": self.callback_query,
+            "message_callback": self.callback_query,
             "shipping_query": self.shipping_query,
             "pre_checkout_query": self.pre_checkout_query,
             "poll": self.poll,

@@ -78,6 +78,16 @@ class UserContextMiddleware(BaseMiddleware):
                 user=event.message.from_user,
                 thread_id=None,
             )
+        if event.update_type == "message_callback":
+            callback_query_message = event.message
+            if callback_query_message:
+                return EventContext(
+                    chat=callback_query_message.chat,
+                    user=event.callback.user,
+                    thread_id=None,
+                    business_connection_id=None,
+                )
+            return EventContext(user=event.callback.user)
         if event.channel_post:
             return EventContext(chat=event.channel_post.chat)
         if event.edited_channel_post:
@@ -86,29 +96,7 @@ class UserContextMiddleware(BaseMiddleware):
             return EventContext(user=event.inline_query.from_user)
         if event.chosen_inline_result:
             return EventContext(user=event.chosen_inline_result.from_user)
-        if event.callback_query:
-            callback_query_message = event.callback_query.message
-            if callback_query_message:
-                return EventContext(
-                    chat=callback_query_message.chat,
-                    user=event.callback_query.from_user,
-                    thread_id=(
-                        callback_query_message.message_thread_id
-                        if not isinstance(
-                            callback_query_message, InaccessibleMessage
-                        )
-                        and callback_query_message.is_topic_message
-                        else None
-                    ),
-                    business_connection_id=(
-                        callback_query_message.business_connection_id
-                        if not isinstance(
-                            callback_query_message, InaccessibleMessage
-                        )
-                        else None
-                    ),
-                )
-            return EventContext(user=event.callback_query.from_user)
+
         if event.shipping_query:
             return EventContext(user=event.shipping_query.from_user)
         if event.pre_checkout_query:

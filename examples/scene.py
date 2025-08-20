@@ -3,23 +3,20 @@ from __future__ import annotations
 from os import getenv
 from typing import TypedDict
 
-from aiogram import Bot, Dispatcher, F, html
+from aiogram_max import Bot, Dispatcher, F, html
 from aiogram_max.filters import Command
 from aiogram_max.fsm.scene import After, Scene, SceneRegistry, on
 from aiogram_max.types import (
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    KeyboardButton,
     Message,
-    ReplyKeyboardMarkup,
-    ReplyKeyboardRemove,
 )
 
 TOKEN = getenv("BOT_TOKEN")
 
-BUTTON_CANCEL = KeyboardButton(text="❌ Cancel")
-BUTTON_BACK = KeyboardButton(text="🔙 Back")
+BUTTON_CANCEL = InlineKeyboardButton(text="❌ Cancel")
+BUTTON_BACK = InlineKeyboardButton(text="🔙 Back")
 
 
 class FSMData(TypedDict, total=False):
@@ -37,7 +34,7 @@ class CancellableScene(Scene):
         F.text.casefold() == BUTTON_CANCEL.text.casefold(), after=After.exit()
     )
     async def handle_cancel(self, message: Message):
-        await message.answer("Cancelled.", reply_markup=ReplyKeyboardRemove())
+        await message.answer("Cancelled.")
 
     @on.message(
         F.text.casefold() == BUTTON_BACK.text.casefold(), after=After.back()
@@ -55,9 +52,8 @@ class LanguageScene(CancellableScene, state="language"):
     async def on_enter(self, message: Message):
         await message.answer(
             "What language do you prefer?",
-            reply_markup=ReplyKeyboardMarkup(
-                keyboard=[[BUTTON_BACK, BUTTON_CANCEL]],
-                resize_keyboard=True,
+            reply_markup=InlineKeyboardMarkup(
+                inline_keyboard=[[BUTTON_BACK, BUTTON_CANCEL]],
             ),
         )
 
@@ -78,8 +74,7 @@ class LanguageScene(CancellableScene, state="language"):
     ) -> None:
         await message.answer(
             text=f"I'll keep in mind that, {html.quote(name)}, "
-            f"you like to write bots with {html.quote(language)}.",
-            reply_markup=ReplyKeyboardRemove(),
+            f"you like to write bots with {html.quote(language)}."
         )
 
 
@@ -92,12 +87,14 @@ class LikeBotsScene(CancellableScene, state="like_bots"):
     async def on_enter(self, message: Message):
         await message.answer(
             "Did you like to write bots?",
-            reply_markup=ReplyKeyboardMarkup(
-                keyboard=[
-                    [KeyboardButton(text="Yes"), KeyboardButton(text="No")],
+            reply_markup=InlineKeyboardMarkup(
+                inline_keyboard=[
+                    [
+                        InlineKeyboardButton(text="Yes"),
+                        InlineKeyboardButton(text="No"),
+                    ],
                     [BUTTON_BACK, BUTTON_CANCEL],
-                ],
-                resize_keyboard=True,
+                ]
             ),
         )
 
@@ -107,10 +104,7 @@ class LikeBotsScene(CancellableScene, state="like_bots"):
 
     @on.message(F.text.casefold() == "no", after=After.exit())
     async def process_dont_like_write_bots(self, message: Message):
-        await message.answer(
-            "Not bad not terrible.\nSee you soon.",
-            reply_markup=ReplyKeyboardRemove(),
-        )
+        await message.answer("Not bad not terrible.\nSee you soon.")
 
     @on.message()
     async def input_like_bots(self, message: Message):
@@ -126,8 +120,8 @@ class NameScene(CancellableScene, state="name"):
     async def on_enter(self, message: Message):
         await message.answer(
             "Hi there! What's your name?",
-            reply_markup=ReplyKeyboardMarkup(
-                keyboard=[[BUTTON_CANCEL]], resize_keyboard=True
+            reply_markup=InlineKeyboardMarkup(
+                inline_keyboard=[[BUTTON_CANCEL]]
             ),
         )
 
@@ -178,21 +172,34 @@ class DefaultScene(
             ),
         )
 
-    @on.callback_query(F.data == "start", after=After.goto(NameScene))
+    # @on.callback_query(F.data == "start", after=After.goto(NameScene))
+    @on.callback_query(F.data == "start")
     async def demo_callback(self, callback_query: CallbackQuery):
         await callback_query.answer(cache_time=0)
-        await callback_query.message.delete_reply_markup()
+
+    @on.callback_query(F.payload == "start")
+    async def demo_callback(self, callback_query: CallbackQuery):
+        await callback_query.answer(cache_time=0)
 
     @on.message.enter()  # Mark that this handler should be called when a user enters the scene.
     @on.message()
     async def default_handler(self, message: Message):
         await message.answer(
             "Start demo?\nYou can also start demo via command /demo",
-            reply_markup=ReplyKeyboardMarkup(
-                keyboard=[[KeyboardButton(text="Demo")]],
-                resize_keyboard=True,
+            reply_markup=InlineKeyboardMarkup(
+                inline_keyboard=[[InlineKeyboardButton(text="Demo")]],
             ),
         )
+
+
+@on.callback_query(F.payload == "start")
+async def demo_callback(callback_query: CallbackQuery):
+    await callback_query.answer("123", cache_time=0)
+
+
+@on.callback_query()
+async def demo_callback(callback_query: CallbackQuery):
+    await callback_query.answer("12345", cache_time=0)
 
 
 def create_dispatcher() -> Dispatcher:

@@ -1002,7 +1002,7 @@ class OnMarker:
     edited_channel_post = ObserverMarker("edited_channel_post")
     inline_query = ObserverMarker("inline_query")
     chosen_inline_result = ObserverMarker("chosen_inline_result")
-    callback_query = ObserverMarker("callback_query")
+    callback_query = ObserverMarker("message_callback")
     shipping_query = ObserverMarker("shipping_query")
     pre_checkout_query = ObserverMarker("pre_checkout_query")
     poll = ObserverMarker("poll")

@@ -25,16 +25,16 @@ class CallbackQuery(TelegramObject):
     """Unique identifier for this query"""
     from_user: User = Field(..., alias="from")
     """Sender"""
-    chat_instance: str
-    """Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent. Useful for high scores in :class:`aiogram.methods.games.Games`."""
+    # chat_instance: str
+    # """Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent. Useful for high scores in :class:`aiogram.methods.games.Games`."""
     message: Optional[MaybeInaccessibleMessageUnion] = None
     """*Optional*. Message sent by the bot with the callback button that originated the query"""
     inline_message_id: Optional[str] = None
     """*Optional*. Identifier of the message sent via the bot in inline mode, that originated the query."""
     data: Optional[str] = None
     """*Optional*. Data associated with the callback button. Be aware that the message originated the query can contain no callback buttons with this data."""
-    game_short_name: Optional[str] = None
-    """*Optional*. Short name of a `Game <https://core.telegram.org/bots/api#games>`_ to be returned, serves as the unique identifier for the game"""
+    # game_short_name: Optional[str] = None
+    # """*Optional*. Short name of a `Game <https://core.telegram.org/bots/api#games>`_ to be returned, serves as the unique identifier for the game"""
 
     if TYPE_CHECKING:
         # DO NOT EDIT MANUALLY!!!
@@ -45,11 +45,11 @@ class CallbackQuery(TelegramObject):
             *,
             id: str,
             from_user: User,
-            chat_instance: str,
+            # chat_instance: str,
             message: Optional[MaybeInaccessibleMessageUnion] = None,
             inline_message_id: Optional[str] = None,
             data: Optional[str] = None,
-            game_short_name: Optional[str] = None,
+            # game_short_name: Optional[str] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             # DO NOT EDIT MANUALLY!!!
@@ -59,11 +59,11 @@ class CallbackQuery(TelegramObject):
             super().__init__(
                 id=id,
                 from_user=from_user,
-                chat_instance=chat_instance,
+                # chat_instance=chat_instance,
                 message=message,
                 inline_message_id=inline_message_id,
                 data=data,
-                game_short_name=game_short_name,
+                # game_short_name=game_short_name,
                 **__pydantic_kwargs,
             )
 
@@ -100,6 +100,7 @@ class CallbackQuery(TelegramObject):
 
         return AnswerCallbackQuery(
             callback_query_id=self.id,
+            chat_id=self.message.recipient.chat_id,
             text=text,
             show_alert=show_alert,
             url=url,

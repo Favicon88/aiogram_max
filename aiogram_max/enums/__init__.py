@@ -13,6 +13,7 @@ from .input_media_type import InputMediaType
 from .input_paid_media_type import InputPaidMediaType
 from .input_profile_photo_type import InputProfilePhotoType
 from .input_story_content_type import InputStoryContentType
+from .intent import Intent
 from .keyboard_button_poll_type_type import KeyboardButtonPollTypeType
 from .mask_position_point import MaskPositionPoint
 from .menu_button_type import MenuButtonType
@@ -53,6 +54,7 @@ __all__ = (
     "InputPaidMediaType",
     "InputProfilePhotoType",
     "InputStoryContentType",
+    "Intent",
     "KeyboardButtonPollTypeType",
     "MaskPositionPoint",
     "MenuButtonType",

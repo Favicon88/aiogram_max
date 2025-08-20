@@ -73,7 +73,6 @@ async def process_name(message: Message, state: FSMContext) -> None:
                     InlineKeyboardButton(text="No"),
                 ]
             ],
-            resize_keyboard=True,
         ),
     )
 

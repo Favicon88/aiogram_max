@@ -26,7 +26,7 @@ from ..fsm.storage.memory import DisabledEventIsolation, MemoryStorage
 from ..fsm.strategy import FSMStrategy
 from ..methods import GetUpdates, TelegramMethod
 from ..methods.base import TelegramType
-from ..types import Update, User
+from ..types import Update, User, CallbackQuery
 from ..types.base import UNSET, UNSET_TYPE
 from ..types.update import UpdateTypeLookupError
 from ..utils.backoff import Backoff, BackoffConfig
@@ -267,7 +267,17 @@ class Dispatcher(Router):
         """
         try:
             update_type = update.update_type
-            event = update.message
+            if update_type == "message_created":
+                event = update.message
+            if update_type == "message_callback":
+                event = CallbackQuery(
+                    id=update.callback.callback_id,
+                    # bot=update.message.bot,
+                    from_user=update.callback.user,
+                    data=update.callback.payload,
+                    message=update.message,
+                )
+                event.as_(update.message.bot)
         except UpdateTypeLookupError as e:
             warnings.warn(
                 "Detected unknown update type.\n"
