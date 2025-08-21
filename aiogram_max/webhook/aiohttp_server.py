@@ -9,7 +9,7 @@ from aiohttp.typedefs import Handler
 from aiohttp.web_app import Application
 from aiohttp.web_middlewares import middleware
 
-from aiogram import Bot, Dispatcher, loggers
+from aiogram_max import Bot, Dispatcher, loggers
 from aiogram_max.methods import TelegramMethod
 from aiogram_max.methods.base import TelegramType
 from aiogram_max.types import InputFile

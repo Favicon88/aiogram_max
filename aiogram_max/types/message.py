@@ -2,7 +2,6 @@ from __future__ import annotations
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union, Literal
 from pydantic import BaseModel, Field
-
 from aiogram_max.utils.text_decorations import (
     TextDecoration,
     html_decoration,
@@ -11,7 +10,7 @@ from aiogram_max.utils.text_decorations import (
 from .attachment import KeyboardAttachment, Keyboard
 
 from ..client.default import Default
-from ..enums import ContentType, ChatType, MessageLinkType
+from ..enums import ContentType, ChatType, MessageLinkType, TextFormat
 from .custom import DateTime
 from .maybe_inaccessible_message import MaybeInaccessibleMessage
 from .reply_parameters import ReplyParameters
@@ -4644,7 +4643,7 @@ class Message(MaybeInaccessibleMessage):
     def reply(
         self,
         text: str,
-        parse_mode: Optional[Union[str, Default]] = Default("parse_mode"),
+        parse_mode: Optional[Union[str, Default]] = TextFormat.html,
         entities: Optional[list[MessageEntity]] = None,
         link_preview_options: Optional[
             Union[LinkPreviewOptions, Default]
@@ -4717,7 +4716,7 @@ class Message(MaybeInaccessibleMessage):
     def answer(
         self,
         text: str,
-        parse_mode: Optional[Union[str, Default]] = Default("parse_mode"),
+        parse_mode: Optional[Union[str, Default]] = TextFormat.html,
         entities: Optional[list[MessageEntity]] = None,
         link_preview_options: Optional[
             Union[LinkPreviewOptions, Default]

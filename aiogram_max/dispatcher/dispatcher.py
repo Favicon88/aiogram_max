@@ -269,10 +269,11 @@ class Dispatcher(Router):
             update_type = update.update_type
             if update_type == "message_created":
                 event = update.message
+            if update_type == "message_edited":
+                event = update.message
             if update_type == "message_callback":
                 event = CallbackQuery(
                     id=update.callback.callback_id,
-                    # bot=update.message.bot,
                     from_user=update.callback.user,
                     data=update.callback.payload,
                     message=update.message,

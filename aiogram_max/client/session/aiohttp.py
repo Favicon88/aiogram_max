@@ -28,12 +28,18 @@ from aiohttp.hdrs import USER_AGENT
 from aiohttp.http import SERVER_SOFTWARE
 
 from aiogram_max.__meta__ import __version__
-from aiogram_max.methods import MaxMethod, AnswerCallbackQuery, SendMessage
+from aiogram_max.methods import (
+    MaxMethod,
+    AnswerCallbackQuery,
+    SendMessage,
+    SetMyCommands,
+)
 
 from ...exceptions import TelegramNetworkError
 from ...methods.base import TelegramType
 from ...types import InputFile, Attachment
 from .base import BaseSession
+from ...enums import TextFormat
 
 if TYPE_CHECKING:
     from ..bot import Bot
@@ -198,12 +204,26 @@ class AiohttpSession(BaseSession):
             if getattr(method, "format", None):
                 payload["format"] = method.format
 
+            if method.parse_mode.lower() == "html":
+                payload["format"] = TextFormat.html
+            elif method.parse_mode.lower() == "markdownv2":
+                payload["format"] = TextFormat.markdown
+
             return {"json": payload}
         elif isinstance(method, AnswerCallbackQuery):
             payload: dict[str, Any] = {}
 
-            if method.text is not None:
-                payload["text"] = method.text
+            if getattr(method, "format", None):
+                payload["format"] = method.format
+
+            return {"json": payload}
+        elif isinstance(method, SetMyCommands):
+            payload = {
+                "commands": [
+                    command.model_dump(exclude_none=True)
+                    for command in method.commands
+                ]
+            }
 
             return {"json": payload}
         else:
@@ -249,6 +269,8 @@ class AiohttpSession(BaseSession):
                 kwargs = form
             elif isinstance(method, AnswerCallbackQuery):
                 url += f"&chat_id={method.chat_id}"
+                kwargs = form
+            elif isinstance(method, SetMyCommands):
                 kwargs = form
             else:
                 kwargs["data"] = form  # aiohttp сам примет FormData или dict

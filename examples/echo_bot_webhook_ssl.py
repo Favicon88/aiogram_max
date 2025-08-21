@@ -9,7 +9,7 @@ from os import getenv
 
 from aiohttp import web
 
-from aiogram import Bot, Dispatcher, Router
+from aiogram_max import Bot, Dispatcher, Router
 from aiogram_max.client.default import DefaultBotProperties
 from aiogram_max.enums import ParseMode
 from aiogram_max.filters import CommandStart

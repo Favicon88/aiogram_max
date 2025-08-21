@@ -1,4 +1,4 @@
-from aiogram import Router
+from aiogram_max import Router
 from aiogram_max.filters import CommandStart
 from aiogram_max.types import Message
 

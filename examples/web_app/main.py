@@ -4,10 +4,10 @@ from os import getenv
 
 from aiohttp.web import run_app
 from aiohttp.web_app import Application
-from handlers import my_router
-from routes import check_data_handler, demo_handler, send_message_handler
+from .handlers import my_router
+from .routes import check_data_handler, demo_handler, send_message_handler
 
-from aiogram import Bot, Dispatcher
+from aiogram_max import Bot, Dispatcher
 from aiogram_max.client.default import DefaultBotProperties
 from aiogram_max.enums.parse_mode import ParseMode
 from aiogram_max.types import MenuButtonWebApp, WebAppInfo

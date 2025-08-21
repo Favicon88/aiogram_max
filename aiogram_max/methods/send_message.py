@@ -15,6 +15,7 @@ from ..types import (
     MessageResponse,
 )
 from .base import TelegramMethod
+from ..enums import TextFormat
 
 
 class SendMessage(TelegramMethod[Message]):
@@ -35,7 +36,7 @@ class SendMessage(TelegramMethod[Message]):
     """Unique identifier of the business connection on behalf of which the message will be sent"""
     message_thread_id: Optional[int] = None
     """Unique identifier for the target message thread (topic) of the forum; for forum supergroups only"""
-    parse_mode: Optional[Union[str, Default]] = Default("parse_mode")
+    parse_mode: Optional[Union[str, Default]] = TextFormat.html
     """Mode for parsing entities in the message text. See `formatting options <https://core.telegram.org/bots/api#formatting-options>`_ for more details."""
     entities: Optional[list[MessageEntity]] = None
     """A JSON-serialized list of special entities that appear in message text, which can be specified instead of *parse_mode*"""

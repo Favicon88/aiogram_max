@@ -4,7 +4,7 @@ from aiohttp.web_fileresponse import FileResponse
 from aiohttp.web_request import Request
 from aiohttp.web_response import json_response
 
-from aiogram import Bot
+from aiogram_max import Bot
 from aiogram_max.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,

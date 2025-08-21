@@ -198,6 +198,7 @@ from .menu_button_commands import MenuButtonCommands
 from .menu_button_default import MenuButtonDefault
 from .menu_button_union import MenuButtonUnion
 from .menu_button_web_app import MenuButtonWebApp
+from .me_response import MeResponse
 from .message import ContentType, Message
 from .message_auto_delete_timer_changed import MessageAutoDeleteTimerChanged
 from .message_entity import MessageEntity
@@ -523,6 +524,7 @@ __all__ = (
     "MenuButtonDefault",
     "MenuButtonUnion",
     "MenuButtonWebApp",
+    "MeResponse",
     "Message",
     "MessageResponse",
     "MessageCreatedUpdate",

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any, Optional, Dict
 
-from ..types import BotCommand, BotCommandScopeUnion
+from ..types import BotCommand, BotCommandScopeUnion, MeResponse
 from .base import TelegramMethod
 
 
@@ -13,8 +13,9 @@ class SetMyCommands(TelegramMethod[bool]):
     Source: https://core.telegram.org/bots/api#setmycommands
     """
 
-    __returning__ = bool
-    __api_method__ = "setMyCommands"
+    __returning__ = MeResponse
+    __api_method__ = "me"
+    __http_method__ = "PATCH"
 
     commands: list[BotCommand]
     """A JSON-serialized list of bot commands to be set as the list of the bot's commands. At most 100 commands can be specified."""
@@ -40,5 +41,8 @@ class SetMyCommands(TelegramMethod[bool]):
             # Is needed only for type checking and IDE support without any additional plugins
 
             super().__init__(
-                commands=commands, scope=scope, language_code=language_code, **__pydantic_kwargs
+                commands=commands,
+                scope=scope,
+                language_code=language_code,
+                **__pydantic_kwargs,
             )

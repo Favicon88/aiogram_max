@@ -2,10 +2,10 @@ import asyncio
 import logging
 from os import getenv
 
-from handlers.echo import echo_router
-from handlers.start import start_router
+from .handlers.echo import echo_router
+from .handlers.start import start_router
 
-from aiogram import Bot, Dispatcher
+from aiogram_max import Bot, Dispatcher
 from aiogram_max.client.default import DefaultBotProperties
 from aiogram_max.enums import ParseMode
 

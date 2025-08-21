@@ -1,7 +1,7 @@
 import asyncio
 from argparse import ArgumentParser
 
-from aiogram import Bot
+from aiogram_max import Bot
 from aiogram_max.client.default import DefaultBotProperties
 from aiogram_max.enums import ParseMode
 

@@ -1,4 +1,4 @@
-from aiogram import Bot, F, Router
+from aiogram_max import Bot, F, Router
 from aiogram_max.filters import Command, CommandStart
 from aiogram_max.types import (
     InlineKeyboardButton,

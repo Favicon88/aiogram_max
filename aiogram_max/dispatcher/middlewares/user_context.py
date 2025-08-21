@@ -127,54 +127,54 @@ class UserContextMiddleware(BaseMiddleware):
             )
         if event.message_reaction_count:
             return EventContext(chat=event.message_reaction_count.chat)
-        if event.chat_boost:
-            # We only check the premium source, because only it has a sender user,
-            # other sources have a user, but it is not the sender, but the recipient
-            if isinstance(
-                event.chat_boost.boost.source, ChatBoostSourcePremium
-            ):
-                return EventContext(
-                    chat=event.chat_boost.chat,
-                    user=event.chat_boost.boost.source.user,
-                )
+        # if event.chat_boost:
+        #     # We only check the premium source, because only it has a sender user,
+        #     # other sources have a user, but it is not the sender, but the recipient
+        #     if isinstance(
+        #         event.chat_boost.boost.source, ChatBoostSourcePremium
+        #     ):
+        #         return EventContext(
+        #             chat=event.chat_boost.chat,
+        #             user=event.chat_boost.boost.source.user,
+        #         )
 
-            return EventContext(chat=event.chat_boost.chat)
-        if event.removed_chat_boost:
-            return EventContext(chat=event.removed_chat_boost.chat)
-        if event.deleted_business_messages:
-            return EventContext(
-                chat=event.deleted_business_messages.chat,
-                business_connection_id=event.deleted_business_messages.business_connection_id,
-            )
-        if event.business_connection:
-            return EventContext(
-                user=event.business_connection.user,
-                business_connection_id=event.business_connection.id,
-            )
-        if event.business_message:
-            return EventContext(
-                chat=event.business_message.chat,
-                user=event.business_message.from_user,
-                thread_id=(
-                    event.business_message.message_thread_id
-                    if event.business_message.is_topic_message
-                    else None
-                ),
-                business_connection_id=event.business_message.business_connection_id,
-            )
-        if event.edited_business_message:
-            return EventContext(
-                chat=event.edited_business_message.chat,
-                user=event.edited_business_message.from_user,
-                thread_id=(
-                    event.edited_business_message.message_thread_id
-                    if event.edited_business_message.is_topic_message
-                    else None
-                ),
-                business_connection_id=event.edited_business_message.business_connection_id,
-            )
-        if event.purchased_paid_media:
-            return EventContext(
-                user=event.purchased_paid_media.from_user,
-            )
+        #     return EventContext(chat=event.chat_boost.chat)
+        # if event.removed_chat_boost:
+        #     return EventContext(chat=event.removed_chat_boost.chat)
+        # if event.deleted_business_messages:
+        #     return EventContext(
+        #         chat=event.deleted_business_messages.chat,
+        #         business_connection_id=event.deleted_business_messages.business_connection_id,
+        #     )
+        # if event.business_connection:
+        #     return EventContext(
+        #         user=event.business_connection.user,
+        #         business_connection_id=event.business_connection.id,
+        #     )
+        # if event.business_message:
+        #     return EventContext(
+        #         chat=event.business_message.chat,
+        #         user=event.business_message.from_user,
+        #         thread_id=(
+        #             event.business_message.message_thread_id
+        #             if event.business_message.is_topic_message
+        #             else None
+        #         ),
+        #         business_connection_id=event.business_message.business_connection_id,
+        #     )
+        # if event.edited_business_message:
+        #     return EventContext(
+        #         chat=event.edited_business_message.chat,
+        #         user=event.edited_business_message.from_user,
+        #         thread_id=(
+        #             event.edited_business_message.message_thread_id
+        #             if event.edited_business_message.is_topic_message
+        #             else None
+        #         ),
+        #         business_connection_id=event.edited_business_message.business_connection_id,
+        #     )
+        # if event.purchased_paid_media:
+        #     return EventContext(
+        #         user=event.purchased_paid_media.from_user,
+        #     )
         return EventContext()

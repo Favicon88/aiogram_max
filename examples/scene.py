@@ -172,8 +172,7 @@ class DefaultScene(
             ),
         )
 
-    # @on.callback_query(F.data == "start", after=After.goto(NameScene))
-    @on.callback_query(F.data == "start")
+    @on.callback_query(F.data == "start", after=After.goto(NameScene))
     async def demo_callback(self, callback_query: CallbackQuery):
         await callback_query.answer(cache_time=0)
 
@@ -190,16 +189,6 @@ class DefaultScene(
                 inline_keyboard=[[InlineKeyboardButton(text="Demo")]],
             ),
         )
-
-
-@on.callback_query(F.payload == "start")
-async def demo_callback(callback_query: CallbackQuery):
-    await callback_query.answer("123", cache_time=0)
-
-
-@on.callback_query()
-async def demo_callback(callback_query: CallbackQuery):
-    await callback_query.answer("12345", cache_time=0)
 
 
 def create_dispatcher() -> Dispatcher:

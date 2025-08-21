@@ -3632,7 +3632,7 @@ class Bot:
         scope: Optional[BotCommandScopeUnion] = None,
         language_code: Optional[str] = None,
         request_timeout: Optional[int] = None,
-    ) -> bool:
+    ) -> dict[str, Any]:
         """
         Use this method to change the list of the bot's commands. See `this manual <https://core.telegram.org/bots/features#commands>`_ for more details about bot commands. Returns :code:`True` on success.
 
